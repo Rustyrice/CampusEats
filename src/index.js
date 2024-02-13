@@ -11,6 +11,7 @@ import LandingPage from './pages/Landing'
 import AuthPage from './pages/Auth'
 import HomePage from './pages/Home'
 import DashboardPage from './pages/Dashboard'
+import SignUp from './pages/SignUp'
 import ErrorPage from './ErrorPage'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -22,6 +23,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/home" element={<HomePage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/error" element={<ErrorPage />} />
+        <Route path="/signup" element={<SignUp />} />
       </Routes>
     </Router>
   </React.StrictMode>,
