@@ -48,7 +48,7 @@ const Navbar = () => {
     <div className="w-full fixed bg-white z-50">
       <nav className="relative flex flex-wrap items-center justify-center lg:justify-between px-4 py-2 border-b-2 border-gray-200">
         <div className="flex items-center">
-          <div className="text-gray-800 text-3xl font-bold cursor-pointer">
+          <div className="text-gray-800 text-2xl font-bold cursor-pointer">
             CampusEats
           </div>
         </div>
