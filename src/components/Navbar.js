@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { AiOutlineHome, AiOutlineSetting, AiOutlineLogin } from 'react-icons/ai'
-import { FaMapMarkerAlt, FaRegUserCircle } from 'react-icons/fa'
+import { FaMapMarkerAlt } from 'react-icons/fa'
+import { MdOutlineSpaceDashboard } from 'react-icons/md'
 import { createClient } from '@supabase/supabase-js'
 
 const supabase = createClient(
@@ -48,7 +49,7 @@ const Navbar = () => {
     <div className="w-full fixed bg-white z-50">
       <nav className="relative flex flex-wrap items-center justify-center lg:justify-between px-4 py-2 border-b-2 border-gray-200">
         <div className="flex items-center">
-          <div className="text-gray-800 text-3xl font-bold cursor-pointer">
+          <div className="text-gray-800 text-2xl font-bold cursor-pointer">
             CampusEats
           </div>
         </div>
@@ -67,6 +68,13 @@ const Navbar = () => {
                   <div className="flex flex-col items-center cursor-pointer">
                     <FaMapMarkerAlt className="text-2xl text-gray-300" />
                     <p className="text-xs text-gray-500">Map</p>
+                  </div>
+                </Link>
+                {/* display this only if user is an admin */}
+                <Link to="/Dashboard">
+                  <div className="flex flex-col items-center cursor-pointer">
+                    <MdOutlineSpaceDashboard className="text-2xl text-gray-300" />
+                    <p className="text-xs text-gray-500">Dashboard</p>
                   </div>
                 </Link>
                 {loggedIn ? (
@@ -114,11 +122,15 @@ const Navbar = () => {
                   Open Map
                 </button>
               </Link>
+              {/* display this only if user is an admin */}
+              <div className="flex flex-col items-center cursor-pointer px-3">
+                <MdOutlineSpaceDashboard className="text-4xl text-gray-300 " />
+              </div>
               {loggedIn ? (
                 // if user is logged in, show user icon
                 <>
                   <div className="flex flex-col items-center cursor-pointer px-3">
-                    <FaRegUserCircle className="text-4xl text-gray-300 " />
+                    <AiOutlineSetting className="text-4xl text-gray-300 " />
                   </div>
                 </>
               ) : (
