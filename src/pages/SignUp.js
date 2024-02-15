@@ -66,36 +66,45 @@ display: error ? '' : 'none',
 };
 
 return (
-<div className="form">
-<div>
-<h1>User Registration</h1>
+  <div>
+ {/* "w-full max-w-xs" */}
+<div class="flex justify-center items-center h-screen">
+  <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <div class="mb-4">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+        Username
+      </label>
+      <input onChange={handleName} value={name} className="input" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" placeholder="Username"/>
+    </div>
+    <div class="mb-4">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+        Email
+      </label>
+      <input onChange={handleEmail} value={email} className="input" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" placeholder="Example@gmail.com"/>
+    </div>
+    <div class="mb-6">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
+        Password
+      </label>
+      <input onChange={handlePassword} className="input" 
+value={password} class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="******************"/>
+    </div>
+    <div class="flex items-center justify-between">
+      <button onClick={handleSubmit} class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
+        Sign In
+      </button>
+    </div>
+    <div class="text-red-500 text-xs italic">
+      {errorMessage()}
+      {successMessage()}
+      </div>
+  </form>
+  {/* <p class="text-center text-gray-500 text-xs">
+    &copy;2020 Acme Corp. All rights reserved.
+  </p> */}
+</div>
 </div>
 
-{/* Calling to the methods */}
-<div className="messages">
-{errorMessage()}
-{successMessage()}
-</div>
-
-<form>
-{/* Labels and inputs for form data */}
-<label className="label">Name</label>
-<input onChange={handleName} className="input"
-value={name} type="text" />
-
-<label className="label">Email</label>
-<input onChange={handleEmail} className="input"
-value={email} type="email" />
-
-<label className="label">Password</label>
-<input onChange={handlePassword} className="input"
-value={password} type="password" />
-
-<button onClick={handleSubmit} className="btn" type="submit">
-Submit
-</button>
-</form>
-</div>
 );
 }
 
