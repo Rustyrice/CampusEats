@@ -13,6 +13,7 @@ import HomePage from './pages/Home'
 import DashboardPage from './pages/Dashboard'
 import SignUp from './pages/SignUp'
 import ErrorPage from './ErrorPage'
+import DietarySelectionPage1 from './pages/DietarySelectionPage1'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -24,6 +25,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/error" element={<ErrorPage />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/dp1" element={<DietarySelectionPage1 />} />
       </Routes>
     </Router>
   </React.StrictMode>,

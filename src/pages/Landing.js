@@ -60,7 +60,7 @@ const Landing = () => {
         WITH YOUR DIETARY NEEDS
       </div>
 
-      <Link to="/signup" style={buttonStyle}>
+      <Link to="/auth" style={buttonStyle}>
         Sign Up
       </Link>
     </div>
