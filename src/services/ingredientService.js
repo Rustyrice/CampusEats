@@ -2,7 +2,6 @@ import { supabase } from "../config/client";
 
 const fetchMeals = async () => {
   const { data, error } = await supabase.from("fountain_allergens").select();
-
   if (error) {
     console.error(`Error fetching meals ${error}`);
     throw error;
@@ -14,14 +13,31 @@ const fetchMeals = async () => {
 
 // newMeal must be valid JSON object
 const addMeal = async (newMeal) => {
-  const { data, error } = await supabase
+  // check if a meal with same name as newMeal exists (case insensitive)
+  const { data: existingMeals, error: selectError } = await supabase
+    .from("fountain_allergens")
+    .select("*")
+    .ilike("name", newMeal.name);
+
+  if (selectError) {
+    console.error(`Error checking for existing meal: ${selectError}`);
+    throw selectError;
+  }
+
+  if (existingMeals.length > 0) {
+    console.error(`A meal with the name ${newMeal.name} already exists.`);
+    return { error: `A meal with the name ${newMeal.name} already exists.` };
+  }
+
+  // error checking passed successfully
+  const { data, error: insertError } = await supabase
     .from("fountain_allergens")
     .insert(newMeal)
     .select();
 
-  if (error) {
-    console.error(`Error adding meal ${error}`);
-    throw error;
+  if (insertError) {
+    console.error(`Error adding meal ${insertError}`);
+    throw insertError;
   }
   if (data) {
     return data;
