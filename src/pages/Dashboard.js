@@ -43,7 +43,7 @@ const Dashboard = () => {
       </form>
       <ul>
         {meals.map((meal) => (
-          <li key={meal.id}>{meal.product}</li>
+          <li key={meal.id}>{meal.name}</li>
         ))}
       </ul>
     </div>
