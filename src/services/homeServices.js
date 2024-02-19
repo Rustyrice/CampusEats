@@ -19,7 +19,7 @@ const getUserAllergens = async (userId) => {
         return data.allergens;
     }
     catch (error){
-        console.error("Error retrieving the allergens", error.message);
+        console.error("Error retrieving user allergens", error.message);
         throw error;
     }
 }
@@ -30,7 +30,26 @@ const getUserMeals = async(userId) =>{
         // getting the user allergens 
         const userAllergens = await getUserAllergens(userId)
 
-        // querying the 'fountain_allergens' table
-        
+
+        // querying the 'fountain_allergens' table and getting all the meals
+        const {data:name, error} = await supabase 
+        .from ('fountain_allergens')
+        .select('*');
+
+        if(error){
+            throw new Error (error.message)
+        }
+        // now filtering the meals 
+        const filteredMeals =  name.filter((meal)=>{
+            // array of meals that dont contain any user allergens
+             return  !userAllergens.some((allergen) =>  meal[allergen])
+        })
+        return filteredMeals;
+    } 
+    catch(error){
+        console.error("Error retrieving filtered meals: " , error.message)
+        throw error;
     }
 }
+
+export {getUserAllergens,getUserMeals}
