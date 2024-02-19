@@ -19,6 +19,22 @@ const AuthUI = () => {
     return () => subscription.unsubscribe();
   }, [navigate]);
 
+  // registering the user (Nico )
+  
+  const registerUser = async (user)=>{
+    try{
+      const{id} = user ;
+      // store the user id in the user table
+      await supabase.from("users").insert({
+        id,
+        isAdmin: false,
+        allergens : []
+      })
+    } catch (error){
+      console.error ("Error registering the user", error.message)
+    }
+  }
+
   return (
     <Auth 
       supabaseClient={supabase}
@@ -30,6 +46,9 @@ const AuthUI = () => {
       appearance={{ theme: ThemeSupa }}
       // controls how to display the social provider icons
       socialLayout="horizontal"
+
+      // invoking the 'registerUser' function (NICO)
+      onUserRegistered = {(user)=>registerUser(user)}
     />
   );
 };
