@@ -4,6 +4,9 @@ import { AiOutlineHome, AiOutlineSetting, AiOutlineLogin } from 'react-icons/ai'
 import { FaMapMarkerAlt } from 'react-icons/fa'
 import { MdOutlineSpaceDashboard } from 'react-icons/md'
 import { createClient } from '@supabase/supabase-js'
+import ReactMapGL from 'react-map-gl'
+import { Marker, Popup } from 'react-map-gl'
+import Map from '../assets/map.png'
 
 const supabase = createClient(
   process.env.REACT_APP_PUBLIC_SUPABASE_URL,
@@ -13,6 +16,7 @@ const supabase = createClient(
 const Navbar = () => {
   const [isBottomBarVisible, setBottomBarVisible] = useState(true)
   const [loggedIn, setLoggedin] = useState(false)
+  const [showMapPopup, setShowMapPopup] = useState(false)
 
   useEffect(() => {
     let prevScrollPos = window.pageYOffset
@@ -64,12 +68,12 @@ const Navbar = () => {
                     <p className="text-xs text-gray-500">Home</p>
                   </div>
                 </Link>
-                <Link to="/map">
+                <button onClick={() => setShowMapPopup(true)}>
                   <div className="flex flex-col items-center cursor-pointer">
                     <FaMapMarkerAlt className="text-2xl text-gray-300" />
                     <p className="text-xs text-gray-500">Map</p>
                   </div>
-                </Link>
+                </button>
                 {/* display this only if user is an admin */}
                 <Link to="/Dashboard">
                   <div className="flex flex-col items-center cursor-pointer">
@@ -100,9 +104,8 @@ const Navbar = () => {
             )}
             {/* Laptop and desktop layout */}
             <div className="hidden lg:flex items-center">
-              <Link to="/auth">
-                <button
-                  className="
+              <button
+                className="
                         inline-block
                         px-14
                         py-1
@@ -118,10 +121,10 @@ const Navbar = () => {
                         hover:bg-green-500
                         ml-3
                       "
-                >
-                  Open Map
-                </button>
-              </Link>
+                onClick={() => setShowMapPopup(true)}
+              >
+                Open Map
+              </button>
               {/* display this only if user is an admin */}
               <div className="flex flex-col items-center cursor-pointer px-3">
                 <MdOutlineSpaceDashboard className="text-4xl text-gray-300 " />
@@ -147,6 +150,25 @@ const Navbar = () => {
           </ul>
         </div>
       </nav>
+
+      {/* Conditional rendering of the map popup */}
+      {showMapPopup && (
+        <div className="fixed top-0 left-0 right-0 bottom-0 bg-gray-800 bg-opacity-75 z-50">
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-4 rounded">
+            <button
+              onClick={() => setShowMapPopup(false)}
+              className="text-black bg-gray-300 px-2 py-1 rounded absolute top-0 right-0 m-2"
+            >
+              X
+            </button>
+            <img
+              src={Map}
+              alt="map"
+              className="max-w-xs md:max-w-xl lg:max-w-4xl h-auto lg:max-h-full"
+            />
+          </div>
+        </div>
+      )}
     </div>
   )
 }
