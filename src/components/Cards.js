@@ -20,7 +20,7 @@ const Cards = () => {
         setRecipes(data)
       }
     }
-
+    
     fetchRecipes()
   }, [])
 
