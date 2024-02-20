@@ -15,11 +15,9 @@ const getPreferences = async (userID) => {
 const submitPreferences = async (preferences, userID) => {
   const { data, error } = await supabase
     .from("users")
-    .update({ allergens: [preferences] })
+    .update({ allergens: preferences })
     .eq("id", userID)
     .select();
-
-  console.log(await getPreferences(userID));
 
   if (error) {
     console.error(error);
