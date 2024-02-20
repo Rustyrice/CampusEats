@@ -1,22 +1,32 @@
 import React, { useState } from "react";
 import SelectionBox from "../components/SelectionBox";
 import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const DietarySelectionPage3 = () => {
-  const [preferences, setPreferences] = useState({
-    lupin: false,
-    soya: false,
-    egg: false,
-    milk: false,
-    fish: false,
-    crustaceans: false,
-    molluscs: false,
-    mustard: false,
-    celery: false,
-    peanuts: false,
-    sesame_seeds: false,
-    sulphur_dioxide: false,
-  });
+  const location = useLocation();
+
+  const [preferences, setPreferences] = useState(
+    location.state
+      ? location.state
+      : {
+          lupin: false,
+          soya: false,
+          egg: false,
+          milk: false,
+          fish: false,
+          crustaceans: false,
+          molluscs: false,
+          mustard: false,
+          celery: false,
+          peanuts: false,
+          sesame_seeds: false,
+          sulphur_dioxide: false,
+          halal: false,
+          vegan: false,
+          vegetarian: false,
+        }
+  );
 
   const updatePreferences = (val) => {
     setPreferences({
@@ -41,37 +51,64 @@ const DietarySelectionPage3 = () => {
 
       {/* CHECKLIST */}
       <div className="flex flex-col justify-center ml-5 mr-5 content-center">
-        <SelectionBox desc="Lupin" onClick={() => updatePreferences("lupin")} />
-        <SelectionBox desc="Soya" onClick={() => updatePreferences("soya")} />
-        <SelectionBox desc="Egg" onClick={() => updatePreferences("egg")} />
-        <SelectionBox desc="Milk" onClick={() => updatePreferences("milk")} />
-        <SelectionBox desc="Fish" onClick={() => updatePreferences("fish")} />
+        <SelectionBox
+          desc="Lupin"
+          checked={preferences.lupin}
+          onClick={() => updatePreferences("lupin")}
+        />
+        <SelectionBox
+          desc="Soya"
+          checked={preferences.soya}
+          onClick={() => updatePreferences("soya")}
+        />
+        <SelectionBox
+          desc="Egg"
+          checked={preferences.egg}
+          onClick={() => updatePreferences("egg")}
+        />
+        <SelectionBox
+          desc="Milk"
+          checked={preferences.milk}
+          onClick={() => updatePreferences("milk")}
+        />
+        <SelectionBox
+          desc="Fish"
+          checked={preferences.fish}
+          onClick={() => updatePreferences("fish")}
+        />
         <SelectionBox
           desc="Crustaceans"
+          checked={preferences.crustaceans}
           onClick={() => updatePreferences("crustaceans")}
         />
         <SelectionBox
           desc="Molluscs"
+          checked={preferences.molluscs}
           onClick={() => updatePreferences("molluscs")}
         />
         <SelectionBox
           desc="Mustard"
+          checked={preferences.mustard}
           onClick={() => updatePreferences("mustard")}
         />
         <SelectionBox
           desc="Celery"
+          checked={preferences.celery}
           onClick={() => updatePreferences("celery")}
         />
         <SelectionBox
           desc="Peanuts"
+          checked={preferences.peanuts}
           onClick={() => updatePreferences("peanuts")}
         />
         <SelectionBox
           desc="Sesame Seeds"
+          checked={preferences.sesame_seeds}
           onClick={() => updatePreferences("sesame_seeds")}
         />
         <SelectionBox
           desc="Sulphur Dioxide"
+          checked={preferences.sulphur_dioxide}
           onClick={() => updatePreferences("sulphur_dioxide")}
         />
 
@@ -79,6 +116,7 @@ const DietarySelectionPage3 = () => {
         <div className="flex justify-center content-center mb-5 mt-5">
           <Link
             to="/dp2"
+            state={preferences}
             className="hover:bg-green-400 rounded-md bg-white font-bold text-green-500 opacity-50 p-5 px-10"
           >
             Previous
@@ -87,7 +125,7 @@ const DietarySelectionPage3 = () => {
             to="/home"
             className="hover:bg-green-400 rounded-md bg-green-500 p-5 px-10 text-white"
           >
-            Next
+            Submit
           </Link>
         </div>
       </div>

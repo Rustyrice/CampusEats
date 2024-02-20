@@ -1,13 +1,32 @@
 import React, { useState } from "react";
 import SelectionBox from "../components/SelectionBox";
 import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const DietarySelectionPage2 = () => {
-  const [preferences, setPreferences] = useState({
-    halal: false,
-    vegetarian: false,
-    vegan: false,
-  });
+  const location = useLocation();
+
+  const [preferences, setPreferences] = useState(
+    location.state
+      ? location.state
+      : {
+          lupin: false,
+          soya: false,
+          egg: false,
+          milk: false,
+          fish: false,
+          crustaceans: false,
+          molluscs: false,
+          mustard: false,
+          celery: false,
+          peanuts: false,
+          sesame_seeds: false,
+          sulphur_dioxide: false,
+          halal: false,
+          vegan: false,
+          vegetarian: false,
+        }
+  );
 
   const updatePreferences = (val) => {
     setPreferences({
@@ -32,16 +51,28 @@ const DietarySelectionPage2 = () => {
 
       {/* CHECKLIST */}
       <div className="flex flex-col justify-center ml-5 mr-5 content-center">
-        <SelectionBox desc="Halal" onClick={() => updatePreferences("halal")} />
+        <SelectionBox
+          desc="Halal"
+          onClick={() => updatePreferences("halal")}
+          checked={preferences.halal}
+        />
         <SelectionBox
           desc="Vegetarian"
           onClick={() => updatePreferences("vegetarian")}
+          checked={preferences.vegetarian}
         />
-        <SelectionBox desc="Vegan" onClick={() => updatePreferences("vegan")} />
+        <SelectionBox
+          desc="Vegan"
+          onClick={() => updatePreferences("vegan")}
+          checked={preferences.vegan}
+        />
+
+        {/* BUTTONS */}
 
         <div className="absolute inset-x-0 bottom-0 h-16 flex justify-center mb-5">
           <Link
-            to="/dp3"
+            to={`/dp3`}
+            state={preferences}
             className="hover:bg-green-400 rounded-md bg-green-500 p-5 px-10 text-white"
           >
             Next
