@@ -33,19 +33,19 @@ const Dashboard = () => {
 
   return (
     <div>
-      <form onSubmit={addMeal}>
-        <input
-          placeholder="meal details"
-          value={newMeal}
-          onChange={handleMealChange}
-        />
-        <input type="submit" />
-      </form>
-      <ul>
         {meals.map((meal) => (
-          <li key={meal.id}>{meal.product}</li>
+          <div key={meal.id}>{meal.product}
+            <form onSubmit={addMeal}>
+              <input
+                  placeholder="meal details"
+                  value={newMeal}
+                  onChange={handleMealChange}
+                />
+              <input type="submit" />
+      </form>
+          
+          </div>
         ))}
-      </ul>
     </div>
   );
 };
