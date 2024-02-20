@@ -52,4 +52,23 @@ const getUserMeals = async(userId) =>{
     }
 }
 
-export {getUserAllergens,getUserMeals}
+const getAllMeals = async (userId)=>{
+    try {
+        const {data:allMeals,error}= await supabase
+        .from ('fountain_allergens')
+        .select('*')
+
+        if(error){
+            throw new Error (error.message)
+        }
+        return allMeals
+    }
+    catch(error){
+        console.error("Error retrieving all meals: ", eorror.message)
+        throw error
+    }
+}
+
+
+
+export {getUserAllergens,getUserMeals,getAllMeals}
