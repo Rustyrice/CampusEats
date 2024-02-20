@@ -79,7 +79,7 @@ const DietarySelectionPage3 = () => {
         <div className="flex justify-center content-center mb-5 mt-5">
           <Link
             to="/dp2"
-            className="hover:bg-green-400 rounded-md bg-white font-bold text-green-500 opacity-50 p-5 px-10 text-white"
+            className="hover:bg-green-400 rounded-md bg-white font-bold text-green-500 opacity-50 p-5 px-10"
           >
             Previous
           </Link>
