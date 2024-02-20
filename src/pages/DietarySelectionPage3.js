@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SelectionBox from "../components/SelectionBox";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { supabase } from "../config/client";
+import userPreferenceService from "../services/userPreferenceService";
 
 const DietarySelectionPage3 = () => {
   const location = useLocation();
@@ -27,6 +29,23 @@ const DietarySelectionPage3 = () => {
           vegetarian: false,
         }
   );
+
+  // GET DETAILS OF CURRENT USER UPON PAGE LOAD
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    async function fetchUserData() {
+      try {
+        const { data, error } = await supabase.auth.getUser();
+        if (error) throw error;
+        if (data) {
+          setUser(data.user);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error.message);
+      }
+    }
+    fetchUserData();
+  }, []);
 
   const updatePreferences = (val) => {
     setPreferences({
@@ -124,6 +143,9 @@ const DietarySelectionPage3 = () => {
           <Link
             to="/home"
             className="hover:bg-green-400 rounded-md bg-green-500 p-5 px-10 text-white"
+            onClick={() => {
+              userPreferenceService.submitPreferences(preferences, user.id);
+            }}
           >
             Submit
           </Link>
