@@ -4,8 +4,6 @@ import { AiOutlineHome, AiOutlineSetting, AiOutlineLogin } from 'react-icons/ai'
 import { FaMapMarkerAlt } from 'react-icons/fa'
 import { MdOutlineSpaceDashboard } from 'react-icons/md'
 import { createClient } from '@supabase/supabase-js'
-import ReactMapGL from 'react-map-gl'
-import { Marker, Popup } from 'react-map-gl'
 import Map from '../assets/map.png'
 
 const supabase = createClient(
