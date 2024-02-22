@@ -15,6 +15,7 @@ const Navbar = () => {
   const [isBottomBarVisible, setBottomBarVisible] = useState(true)
   const [loggedIn, setLoggedin] = useState(false)
   const [showMapPopup, setShowMapPopup] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
 
   useEffect(() => {
     let prevScrollPos = window.pageYOffset
@@ -38,6 +39,20 @@ const Navbar = () => {
     const { data } = await supabase.auth.getSession()
     if (data?.session) {
       setLoggedin(true)
+
+      const { data: userData, error } = await supabase
+        .from('users')
+        .select('isAdmin')
+        .eq('id', data.session.user.id)
+        .single()
+
+      console.log('userData:', userData)
+
+      if (error) {
+        console.log('Error fetching user data:', error.message)
+      } else {
+        setIsAdmin(userData?.isAdmin || false)
+      }
     } else {
       setLoggedin(false)
     }
@@ -73,12 +88,14 @@ const Navbar = () => {
                   </div>
                 </button>
                 {/* display this only if user is an admin */}
-                <Link to="/Dashboard">
-                  <div className="flex flex-col items-center cursor-pointer">
-                    <MdOutlineSpaceDashboard className="text-2xl text-gray-300" />
-                    <p className="text-xs text-gray-500">Dashboard</p>
-                  </div>
-                </Link>
+                {loggedIn && isAdmin && (
+                  <Link to="/Dashboard">
+                    <div className="flex flex-col items-center cursor-pointer">
+                      <MdOutlineSpaceDashboard className="text-2xl text-gray-300" />
+                      <p className="text-xs text-gray-500">Dashboard</p>
+                    </div>
+                  </Link>
+                )}
                 {loggedIn ? (
                   // if user is logged in, show settings
                   <>
@@ -124,9 +141,13 @@ const Navbar = () => {
                 Open Map
               </button>
               {/* display this only if user is an admin */}
-              <div className="flex flex-col items-center cursor-pointer px-3">
-                <MdOutlineSpaceDashboard className="text-4xl text-gray-300 " />
-              </div>
+              {loggedIn && isAdmin && (
+                <Link to="/Dashboard">
+                  <div className="flex flex-col items-center cursor-pointer px-3">
+                    <MdOutlineSpaceDashboard className="text-4xl text-gray-300 " />
+                  </div>
+                </Link>
+              )}
               {loggedIn ? (
                 // if user is logged in, show user icon
                 <>

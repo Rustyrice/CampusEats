@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { FaStar } from 'react-icons/fa'
 import { supabase } from '../config/client'
+import { Transition } from '@headlessui/react'
 
 const Cards = () => {
   const [recipes, setRecipes] = useState([])
   const [selectedRecipe, setSelectedRecipe] = useState({})
   const [showPopup, setShowPopup] = useState(false)
+  const [value, setValue] = useState(0)
+  const [hoveredRating, setHoveredRating] = useState(null)
+  const [submittingRating, setSubmittingRating] = useState(false)
 
   useEffect(() => {
     // fetch data from supabase
@@ -35,12 +39,40 @@ const Cards = () => {
     { name: 'peanuts', label: 'Peanuts' },
     { name: 'sesame_seed', label: 'Sesame Seed' },
     { name: 'sulphur_dioxide', label: 'Sulphur Dioxide' },
-    { name: 'vegetarian', label: 'Vegetarian' },
-    { name: 'vegan', label: 'Vegan' },
-    { name: 'halal', label: 'Halal' },
     { name: 'milk', label: 'Milk' },
     { name: 'mustard', label: 'Mustard' },
   ]
+
+  const handleMouseEnter = (newRating) => {
+    setHoveredRating(newRating)
+  }
+
+  const handleMouseLeave = () => {
+    setHoveredRating(null)
+  }
+
+  const handleRatingClick = (selectedRating) => {
+    setValue(selectedRating)
+  }
+
+  // const handleSubmitRating = async () => {
+  //   setSubmittingRating(true)
+
+  //   try {
+  //     const { data, error } = await supabase
+  //       .from('fountain_allergens')
+  //       .update({ rating: value })
+  //       .eq('id', selectedRecipe.id)
+
+  //     if (error) {
+  //       console.log('error submitting rating', error.message)
+  //     } else {
+  //       console.log('rating submitted successfully', data)
+  //     }
+  //   } finally {
+  //     setSubmittingRating(false)
+  //   }
+  // }
 
   return (
     <div className="w-full bg-gray-100 py-20">
@@ -90,7 +122,8 @@ const Cards = () => {
                     {selectedRecipe.cereals &&
                       selectedRecipe.cereals.length > 0 && (
                         <p className="text-gray-500 mb-4">
-                          Cereals: {selectedRecipe.cereals || 'N/A'}
+                          Cereals:{' '}
+                          {selectedRecipe.cereals || 'Does not contain cereals'}
                         </p>
                       )}
                     {allergens.filter(
@@ -104,15 +137,69 @@ const Cards = () => {
                           .join(', ') || 'N/A'}
                       </p>
                     )}
-                    <button
-                      onClick={() => {
-                        setSelectedRecipe({})
-                        setShowPopup(false)
-                      }}
-                      className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition duration-300"
-                    >
-                      Close
-                    </button>
+                    <p className="text-gray-500 mb-4">
+                      Vegetarian: {selectedRecipe.vegetarian ? 'Yes' : 'No'}
+                    </p>
+                    <p className="text-gray-500 mb-4">
+                      Vegan: {selectedRecipe.vegan ? 'Yes' : 'No'}
+                    </p>
+                    <p className="text-gray-500 mb-4">
+                      Halal: {selectedRecipe.halal ? 'Yes' : 'No'}
+                    </p>
+                    {/* rating system */}
+                    <div className="flex flex-col items-center mt-5">
+                      <h3 className="text-md md:text-lg lg:text-xl text-gray-700 font-bold text-left mt-5 mb-2">
+                        Tried this dish? Give it some feedback!
+                      </h3>
+                      <div className="flex items-center">
+                        {[...Array(5)].map((_, index) => (
+                          <div
+                            key={index}
+                            className="relative cursor-pointer md:mx-1 lg:mx-2 xl:mx-3"
+                            onMouseEnter={() => handleMouseEnter(index + 1)}
+                            onMouseLeave={handleMouseLeave}
+                            onClick={() => handleRatingClick(index + 1)}
+                          >
+                            <FaStar
+                              className={`w-6 h-6 ${
+                                (index + 1 <= value ||
+                                  index + 1 <= hoveredRating) &&
+                                'text-yellow-500'
+                              }`}
+                            />
+                            <Transition
+                              show={index + 1 === hoveredRating}
+                              enter="transform transition duration-200"
+                              enterFrom="scale-75 opacity-0"
+                              enterTo="scale-100 opacity-100"
+                              leave="transform duration-100 transition"
+                              leaveFrom="scale-100 opacity-100"
+                              leaveTo="scale-75 opacity-0"
+                            ></Transition>
+                          </div>
+                        ))}
+                      </div>
+                      {/* <div className="mt-2 md:mt-3 lg:mt-4 xl:mt-5">
+                        <button
+                          onClick={handleSubmitRating}
+                          disabled={submittingRating}
+                          className="bg-green-500 text-white py-1 px-2 rounded-md hover:bg-green-600 transition duration-300"
+                        >
+                          {submittingRating ? 'Submitting...' : 'Submit'}
+                        </button>
+                      </div> */}
+                    </div>
+                    <div>
+                      <button
+                        onClick={() => {
+                          setSelectedRecipe({})
+                          setShowPopup(false)
+                        }}
+                        className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition duration-300"
+                      >
+                        Close
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}
