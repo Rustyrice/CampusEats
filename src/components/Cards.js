@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react'
-import { FaStar } from 'react-icons/fa'
-import { supabase } from '../config/client'
+import React, { useState, useEffect } from 'react';
+import { FaStar } from 'react-icons/fa';
+import { supabase } from '../config/client';
+import { getUserMeals } from '../services/homeServices';
 import { Transition } from '@headlessui/react'
 
 const Cards = () => {
@@ -10,24 +11,55 @@ const Cards = () => {
   const [value, setValue] = useState(0)
   const [hoveredRating, setHoveredRating] = useState(null)
   const [submittingRating, setSubmittingRating] = useState(false)
+  // useEffect(() => {
+  //   // fetch data from supabase
+  //   const fetchRecipes = async () => {
+  //     const { data, error } = await supabase
+  //       .from('fountain_allergens')
+  //       .select('*')
 
+  //     if (error) {
+  //       console.log('error fetching recipes', error.message)
+  //     } else {
+  //       setRecipes(data)
+  //     }
+  //   }
+    
+  //   fetchRecipes()
+  // }, [])
   useEffect(() => {
-    // fetch data from supabase
     const fetchRecipes = async () => {
-      const { data, error } = await supabase
-        .from('fountain_allergens')
-        .select('*')
+      // Get the current user
+      const user = await supabase.auth.getUser();
+      console.log("Current User:", user); // Log the current user object
+      if (user) {
+        // Get the user's ID
+        const userId = user.data.user.id;
 
-      if (error) {
-        console.log('error fetching recipes', error.message)
-      } else {
-        setRecipes(data)
+        // checking user id vlaue
+        console.log("Fetching meals for user ID:", userId);
+
+        // Call the backend function to get meals safe for the user
+        const { data: safeMeals, error } = await getUserMeals(userId);
+  
+        if (error) {
+          console.log('Error fetching safe meals', error.message);
+        } 
+//  i get undefined when fetching the meals 
+        // console.log("Fetched meals:", safeMeals);
+        // setRecipes(safeMeals);
+
+
+        else {
+          console.log("Fetched meals:", safeMeals);
+          setRecipes(safeMeals);
+        }
       }
-    }
-
-    fetchRecipes()
-  }, [])
-
+    };
+  
+    fetchRecipes();
+  }, []);
+  
   const allergens = [
     { name: 'lupin', label: 'Lupin' },
     { name: 'soya', label: 'Soya' },
@@ -78,7 +110,9 @@ const Cards = () => {
     <div className="w-full bg-gray-100 py-20">
       <div className="container mx-auto px-4 md:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {recipes.map((recipe) => (
+          {/* making some changes in the JSX */}
+          {recipes && recipes.length > 0 &&(
+          recipes.map((recipe) => (
             <div
               key={recipe.id}
               className="bg-white rounded-lg shadow-md p-6 flex flex-col"
@@ -204,7 +238,13 @@ const Cards = () => {
                 </div>
               )}
             </div>
-          ))}
+          ))
+          )} {/* removed a curly bracket */}
+          
+
+          {recipes.length == 0 && (
+            <div className='text-center py-4'>Loading recipes...</div>
+          )}
         </div>
       </div>
     </div>

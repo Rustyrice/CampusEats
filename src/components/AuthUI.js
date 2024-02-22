@@ -15,10 +15,9 @@ const AuthUI = () => {
         navigate("/userinfo");
       }
     });
-
     return () => subscription.unsubscribe();
   }, [navigate]);
-
+  
   return (
     <Auth 
       supabaseClient={supabase}
