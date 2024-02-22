@@ -11,6 +11,7 @@ import LandingPage from "./pages/Landing";
 import AuthPage from "./pages/Auth";
 import HomePage from "./pages/Home";
 import DashboardPage from "./pages/Dashboard";
+import EnquiriesPage from "./pages/Enquiries";
 import SignUp from "./pages/SignUp";
 import ErrorPage from "./ErrorPage";
 import DietarySelectionPage1 from "./pages/DietarySelectionPage1";
@@ -26,6 +27,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/enquiries" element={<EnquiriesPage />} />
         <Route path="/error" element={<ErrorPage />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/dp1" element={<DietarySelectionPage1 />} />
