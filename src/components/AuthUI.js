@@ -12,7 +12,7 @@ const AuthUI = () => {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event) => {
       if (event === "SIGNED_IN") {
-        navigate("/userinfo");
+        navigate("/home");
       }
     });
     return () => subscription.unsubscribe();
