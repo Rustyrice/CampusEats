@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { AiOutlineHome, AiOutlineSetting, AiOutlineLogin } from 'react-icons/ai'
 import { FaMapMarkerAlt } from 'react-icons/fa'
-import { MdOutlineSpaceDashboard } from 'react-icons/md'
+import { MdOutlineSpaceDashboard, MdOutlineForum } from 'react-icons/md'
 import { createClient } from '@supabase/supabase-js'
 import Map from '../assets/map.png'
 
@@ -66,9 +66,11 @@ const Navbar = () => {
     <div className="w-full fixed bg-white z-50">
       <nav className="relative flex flex-wrap items-center justify-center lg:justify-between px-4 py-2 border-b-2 border-gray-200">
         <div className="flex items-center">
-          <div className="text-gray-800 text-2xl font-bold cursor-pointer">
-            CampusEats
-          </div>
+          <Link to="/home">
+            <div className="text-gray-800 text-2xl font-bold cursor-pointer">
+              CampusEats
+            </div>
+          </Link>
         </div>
         <div className="text-center">
           <ul className="flex items-center justify-end list-none">
@@ -87,9 +89,15 @@ const Navbar = () => {
                     <p className="text-xs text-gray-500">Map</p>
                   </div>
                 </button>
+                <Link to="/enquiries">
+                  <div className="flex flex-col items-center cursor-pointer">
+                    <MdOutlineForum className="text-2xl text-gray-300" />
+                    <p className="text-xs text-gray-500">Enquiries</p>
+                  </div>
+                </Link>
                 {/* display this only if user is an admin */}
                 {loggedIn && isAdmin && (
-                  <Link to="/Dashboard">
+                  <Link to="/dashboard">
                     <div className="flex flex-col items-center cursor-pointer">
                       <MdOutlineSpaceDashboard className="text-2xl text-gray-300" />
                       <p className="text-xs text-gray-500">Dashboard</p>
@@ -142,18 +150,25 @@ const Navbar = () => {
               </button>
               {/* display this only if user is an admin */}
               {loggedIn && isAdmin && (
-                <Link to="/Dashboard">
+                <Link to="/dashboard">
                   <div className="flex flex-col items-center cursor-pointer px-3">
                     <MdOutlineSpaceDashboard className="text-4xl text-gray-300 " />
                   </div>
                 </Link>
               )}
+              <Link to="/enquiries">
+                <div className="flex flex-col items-center cursor-pointer px-3">
+                  <MdOutlineForum className="text-4xl text-gray-300 " />
+                </div>
+              </Link>
               {loggedIn ? (
                 // if user is logged in, show user icon
                 <>
-                  <div className="flex flex-col items-center cursor-pointer px-3">
-                    <AiOutlineSetting className="text-4xl text-gray-300 " />
-                  </div>
+                  <Link to="/settings">
+                    <div className="flex flex-col items-center cursor-pointer px-3">
+                      <AiOutlineSetting className="text-4xl text-gray-300 " />
+                    </div>
+                  </Link>
                 </>
               ) : (
                 // if user is not logged in, show login icon
