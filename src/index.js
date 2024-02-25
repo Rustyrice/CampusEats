@@ -1,25 +1,25 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import "./index.css";
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import './index.css'
 
 // styles
-import "tailwindcss/tailwind.css";
+import 'tailwindcss/tailwind.css'
 
 // pages
-import LandingPage from "./pages/Landing";
-import AuthPage from "./pages/Auth";
-import HomePage from "./pages/Home";
-import DashboardPage from "./pages/Dashboard";
-import EnquiriesPage from "./pages/Enquiries";
-import SignUp from "./pages/SignUp";
-import ErrorPage from "./ErrorPage";
-import DietarySelectionPage1 from "./pages/DietarySelectionPage1";
-import DietarySelectionPage2 from "./pages/DietarySelectionPage2";
-import DietarySelectionPage3 from "./pages/DietarySelectionPage3";
+import LandingPage from './pages/Landing'
+import AuthPage from './pages/Auth'
+import HomePage from './pages/Home'
+import DashboardPage from './pages/Dashboard'
+import EnquiriesPage from './pages/Enquiries'
+import SignUp from './pages/SignUp'
+import ErrorPage from './ErrorPage'
+import DietarySelectionPage1 from './pages/DietarySelectionPage1'
+import DietarySelectionPage2 from './pages/DietarySelectionPage2'
+import DietarySelectionPage3 from './pages/DietarySelectionPage3'
 import UserInfo from './pages/UserInfo'
 
-ReactDOM.createRoot(document.getElementById("root")).render(
+ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <Router>
       <Routes>
@@ -36,5 +36,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/userinfo" element={<UserInfo />} />
       </Routes>
     </Router>
-  </React.StrictMode>
-);
+  </React.StrictMode>,
+)

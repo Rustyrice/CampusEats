@@ -14,6 +14,7 @@ const Cards = () => {
   const [submittingRating, setSubmittingRating] = useState(false)
   const [ratingSum, setRatingSum] = useState(0)
   const [ratingCount, setRatingCount] = useState(0)
+  const [dishRatings, setDishRatings] = useState({})
 
   // useEffect(() => {
   //   // fetch data from supabase
@@ -65,17 +66,26 @@ const Cards = () => {
   useEffect(() => {
     const fetchRatings = async () => {
       const { data, error } = await supabase
-        .from('fountain_allergens')
-        .select('id, rating')
+        .from('fountain_allergens_ratings')
+        .select('dish_id, user_id, rating')
 
       if (error) {
         console.error('Error fetching ratings:', error.message)
       } else {
-        const newRatings = {}
-        data.forEach((dish) => {
-          newRatings[dish.id] = dish.rating || { sum: 0, count: 0 }
+        const newDishRatings = {}
+        data.forEach((rating) => {
+          const dishId = rating.dish_id
+          const userId = rating.user_id
+          const userRating = rating.rating || { sum: 0, count: 0 }
+
+          // Store ratings in a nested structure
+          if (!newDishRatings[dishId]) {
+            newDishRatings[dishId] = {}
+          }
+
+          newDishRatings[dishId][userId] = userRating
         })
-        setRatings(newRatings)
+        setDishRatings(newDishRatings)
       }
     }
 
@@ -105,36 +115,71 @@ const Cards = () => {
     setHoveredRating(null)
   }
 
-  const handleRatingClick = (selectedRating) => {
-    const ratingSum = 0
-    const ratingCount = 0
+  const handleRatingClick = (selectedRating, dishId) => {
+    const newRatings = { ...dishRatings }
+    const newRatingSum = (newRatings[dishId]?.sum || 0) + selectedRating
+    const newRatingCount = (newRatings[dishId]?.count || 0) + 1
 
-    const newRatingSum = ratingSum + selectedRating
-    const newRatingCount = ratingCount + 1
+    newRatings[dishId] = { sum: newRatingSum, count: newRatingCount }
 
     setValue(selectedRating)
-    setRatingSum(newRatingSum)
-    setRatingCount(newRatingCount)
+    setDishRatings(newRatings)
   }
 
   const handleSubmitRating = async () => {
     setSubmittingRating(true)
 
     try {
-      const ratingData = {
-        sum: ratingSum,
-        count: ratingCount,
+      const user = await supabase.auth.getUser()
+
+      if (!user) {
+        console.log('User object is undefined')
+        return
       }
 
+      const currentUserId = user.id
+
+      console.log('Current User ID:', currentUserId)
+
+      // Fetch the user from the users table to get the userId
+      const { data: userData, error: userError } = await supabase
+        .from('users')
+        .select('id') // or any other fields you need
+        .eq('id', currentUserId)
+
+      if (userError) {
+        console.log('Error fetching user data', userError.message)
+        return
+      }
+
+      console.log('Fetched User Data:', userData)
+
+      const userId = userData[0]?.id
+
+      console.log('User ID from Users Table:', userId)
+
+      const ratingData = {
+        sum: dishRatings[selectedRecipe.id]?.sum || 0,
+        count: dishRatings[selectedRecipe.id]?.count || 0,
+      }
+
+      console.log('Rating Data:', ratingData)
+
+      // Insert the rating into the ratings table
       const { data, error } = await supabase
-        .from('fountain_allergens')
-        .update({ rating: ratingData })
-        .eq('id', selectedRecipe.id)
+        .from('fountain_allergens_ratings')
+        .upsert([
+          {
+            dish_id: selectedRecipe.id,
+            user_id: userId,
+            rating: ratingData,
+          },
+        ])
 
       if (error) {
-        console.log('error submitting rating', error.message)
+        console.log('Error submitting rating', error.message)
       } else {
-        console.log('rating submitted successfully', data)
+        console.log('Rating submitted successfully', data)
       }
     } finally {
       setSubmittingRating(false)
