@@ -35,3 +35,15 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+@media (max-width: 768px) {
+  .auth-container {
+    width: 70%; /* Adjust width for smaller screens */
+  }
+}
+
+@media (max-width: 576px) {
+  .auth-container {
+    width: 90%;  /* Adjust width for even smaller screens */
+  }
+}
