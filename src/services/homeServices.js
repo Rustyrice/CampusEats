@@ -44,53 +44,6 @@ const getUserAllergens = async (userId) => {
         throw error;
     }
 }
-
-// getting the filtered meals for that user 
-// const getUserMeals = async(userId) =>{
-//     try{
-//         // getting the user allergens 
-//         const userAllergens = await getUserAllergens(userId)
-
-//         // checking
-//         console.log("User allergens:", userAllergens);
-
-//         // querying the 'fountain_allergens' table and getting all the meals
-//         const {data:userMeals, error} = await supabase 
-//         .from ('fountain_allergens')
-//         .select('*');
-
-//         if(error){
-//             throw new Error (error.message)
-//         }
-//         // checking
-//         console.log("heyyyyyy");
-
-//         console.log("Retrieved all meals before filtering:", userMeals);
-
-//         // now filtering the meals 
-//         const filteredMeals =  userMeals.filter((meal)=>{
-//             // array of meals that dont contain any user allergens
-            
-//              return  !userAllergens.some((allergen) =>  meal[allergen])
-//         })
-
-//         // checking 
-//         console.log("Is filteredMeals an array? ", Array.isArray(filteredMeals));
-//         console.log("Filtered meals:", filteredMeals);
-
-//         // return filteredMeals;
-//         return {
-//             data: filteredMeals,
-//             error: null,
-//           };
-//     } 
-//     catch(error){
-//         console.error("Error retrieving filtered meals: " , error.message)
-//         throw error;
-//     }
-// }
-
-
     
 const getUserMeals = async (userId) => {
     try {

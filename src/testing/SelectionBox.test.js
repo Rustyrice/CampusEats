@@ -1,26 +1,57 @@
-import { render, screen, cleanup } from '@testing-library/react';
-import '@testing-library/jest-dom'
+// import { render, screen, cleanup } from '@testing-library/react';
+// import '@testing-library/jest-dom'
+// import SelectionBox from '../components/SelectionBox';
+// import { useState } from 'react';
+
+// const updatePreference = (preference) => {
+//   preference = !preference;
+// }
+
+
+// test('Should render selection box component' , () => {
+//   let isHalal = false;
+
+//   //SETUP
+//   render(<SelectionBox
+//     desc="Halal"
+//     onClick={() => updatePreference(isHalal)}
+//     checked={true}
+//   />);
+
+//   //CALL
+//   const todoElement = screen.getByTestId('tickedCheckbox');
+
+//   //ASSERTION
+//   expect(todoElement).toBeInTheDocument();
+// })
+
+// Assuming SelectionBox has an `onChange` prop to handle changes
+import { render, fireEvent, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import SelectionBox from '../components/SelectionBox';
 import { useState } from 'react';
 
-const updatePreference = (preference) => {
-  preference = !preference;
+// Simulate a parent component to hold the state
+function SelectionBoxTest() {
+  const [isHalal, setIsHalal] = useState(false);
+  
+  return (
+    <SelectionBox
+      desc="Halal"
+      onClick={() => setIsHalal(prev => !prev)}
+      checked={isHalal}
+    />
+  );
 }
 
-
-test('Should render selection box component' , () => {
-  let isHalal = false;
-
+test('Selection box component reflects halal preference', () => {
   //SETUP
-  render(<SelectionBox
-    desc="Halal"
-    onClick={() => updatePreference(isHalal)}
-    checked={true}
-  />);
+  render(<SelectionBoxTest />);
 
-  //CALL
-  const todoElement = screen.getByTestId('tickedCheckbox');
+  // CALL
+  const checkbox = screen.getByRole('checkbox'); 
+  fireEvent.click(checkbox);
 
   //ASSERTION
-  expect(todoElement).toBeInTheDocument();
-})
+  expect(checkbox).toBeChecked(); // Check if the checkbox reflects the expected state
+});
