@@ -5,7 +5,7 @@ import { getUserMeals } from '../services/homeServices'
 import { Transition } from '@headlessui/react'
 import { useNavigate } from 'react-router-dom'
 
-const Cards = () => {
+const Cards = ({enabled}) => {
   const [recipes, setRecipes] = useState([])
   const [selectedRecipe, setSelectedRecipe] = useState({})
   const [showPopup, setShowPopup] = useState(false)
@@ -34,6 +34,8 @@ const Cards = () => {
 
   //   fetchRecipes()
   // }, [])
+
+  
   useEffect(() => {
     const fetchRecipes = async () => {
       // Get the current user
@@ -42,60 +44,54 @@ const Cards = () => {
 
       if (user && user.data && user.data.user) {
         // Get the user's ID
-        const userId = user.data.user.id
-        console.log('Fetching meals for user ID:', userId)
+        const userId = user.data.user.id;
+
+        // checking user id vlaue
+        console.log("Fetching meals for user ID:", userId);
+
+        let meals ;
+        if(enabled){
+          const { data, error } = await supabase
+          .from('fountain_allergens')
+          .select('*')
+          if(error){
+            console.log('Error fetching all meals', error.message);
+            return; 
+          }
+          meals = data
+        }
+        else{
+          const { data: safeMeals, error } = await getUserMeals(userId);
+          if (error) {
+            console.log('Error fetching safe meals', error.message);
+            return;
+          } 
+          meals = safeMeals
+
+        }
+
+        console.log("Fetched meals:", meals);
+        setRecipes(meals);
 
         // Call the backend function to get meals safe for the user
-        const { data: safeMeals, error } = await getUserMeals(userId)
+        // if (error) {
+        //   console.log('Error fetching safe meals', error.message);
+        // } 
+//  i get undefined when fetching the meals 
+        // console.log("Fetched meals:", safeMeals);
+        // setRecipes(safeMeals);
 
-        if (error) {
-          console.log('Error fetching safe meals', error.message)
-        } else {
-          console.log('Fetched meals:', safeMeals)
-          setRecipes(safeMeals)
-        }
-      } else {
-        console.log('User is not authenticated or user data is missing.')
-        // redirect user to auth page
-        navigate('/auth')
+
+        // else {
+        //   console.log("Fetched meals:", meals);
+        //   setRecipes(meals);
+        // }
       }
-    }
-
-    fetchRecipes()
-  }, [])
-
-  useEffect(() => {
-    const fetchRatings = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('fountain_allergens_ratings')
-          .select('dish_id, user_id, rating')
-
-        if (error) {
-          console.error('Error fetching ratings:', error.message)
-        } else {
-          const newDishRatings = {}
-          data.forEach((rating) => {
-            const dishId = rating.dish_id
-            const userId = rating.user_id
-            const userRating = rating.rating || 0
-
-            if (!newDishRatings[dishId]) {
-              newDishRatings[dishId] = {}
-            }
-
-            newDishRatings[dishId][userId] = userRating
-          })
-          setDishRatings(newDishRatings)
-        }
-      } catch (error) {
-        console.error('Error fetching ratings:', error.message)
-      }
-    }
-
-    fetchRatings()
-  }, [])
-
+    };
+  
+    fetchRecipes();
+  }, [enabled]);
+  
   const allergens = [
     { name: 'lupin', label: 'Lupin' },
     { name: 'soya', label: 'Soya' },

@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Switch } from '@headlessui/react'
 
-const Filter = () => {
-  const [enabled, setEnabled] = useState(false)
+// const Filter = () => {
+  // const [enabled, setEnabled] = useState(false)
+const Filter = ({ enabled, setEnabled }) => {
 
   return (
     <Switch.Group>
