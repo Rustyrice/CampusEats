@@ -48,7 +48,7 @@ const AuthUI = () => {
       <Auth 
         supabaseClient={supabase}
         // controls whether to display only social providers
-        providers={["google", "github", "discord"]}
+        providers={[]}
         // onlyThirdPartyProviders
         redirectTo="http://localhost:3000/Dashboard"
         // comes with preconfigured themes, can add custom themes
