@@ -3,6 +3,7 @@ import { FaStar } from 'react-icons/fa'
 import { supabase } from '../config/client'
 import { getUserMeals } from '../services/homeServices'
 import { Transition } from '@headlessui/react'
+import { useNavigate } from 'react-router-dom'
 
 const Cards = () => {
   const [recipes, setRecipes] = useState([])
@@ -15,6 +16,8 @@ const Cards = () => {
   const [ratingSum, setRatingSum] = useState(0)
   const [ratingCount, setRatingCount] = useState(0)
   const [dishRatings, setDishRatings] = useState({})
+  const navigate = useNavigate()
+  const [averageRatings, setAverageRatings] = useState({})
 
   // useEffect(() => {
   //   // fetch data from supabase
@@ -36,12 +39,11 @@ const Cards = () => {
     const fetchRecipes = async () => {
       // Get the current user
       const user = await supabase.auth.getUser()
-      console.log('Current User:', user) // Log the current user object
-      if (user) {
+      console.log('Current User:', user)
+
+      if (user && user.data && user.data.user) {
         // Get the user's ID
         const userId = user.data.user.id
-
-        // checking user id vlaue
         console.log('Fetching meals for user ID:', userId)
 
         // Call the backend function to get meals safe for the user
@@ -49,14 +51,14 @@ const Cards = () => {
 
         if (error) {
           console.log('Error fetching safe meals', error.message)
-        }
-        //  i get undefined when fetching the meals
-        // console.log("Fetched meals:", safeMeals);
-        // setRecipes(safeMeals);
-        else {
+        } else {
           console.log('Fetched meals:', safeMeals)
           setRecipes(safeMeals)
         }
+      } else {
+        console.log('User is not authenticated or user data is missing.')
+        // redirect user to auth page
+        navigate('/auth')
       }
     }
 
@@ -65,27 +67,30 @@ const Cards = () => {
 
   useEffect(() => {
     const fetchRatings = async () => {
-      const { data, error } = await supabase
-        .from('fountain_allergens_ratings')
-        .select('dish_id, user_id, rating')
+      try {
+        const { data, error } = await supabase
+          .from('fountain_allergens_ratings')
+          .select('dish_id, user_id, rating')
 
-      if (error) {
+        if (error) {
+          console.error('Error fetching ratings:', error.message)
+        } else {
+          const newDishRatings = {}
+          data.forEach((rating) => {
+            const dishId = rating.dish_id
+            const userId = rating.user_id
+            const userRating = rating.rating || 0
+
+            if (!newDishRatings[dishId]) {
+              newDishRatings[dishId] = {}
+            }
+
+            newDishRatings[dishId][userId] = userRating
+          })
+          setDishRatings(newDishRatings)
+        }
+      } catch (error) {
         console.error('Error fetching ratings:', error.message)
-      } else {
-        const newDishRatings = {}
-        data.forEach((rating) => {
-          const dishId = rating.dish_id
-          const userId = rating.user_id
-          const userRating = rating.rating || { sum: 0, count: 0 }
-
-          // Store ratings in a nested structure
-          if (!newDishRatings[dishId]) {
-            newDishRatings[dishId] = {}
-          }
-
-          newDishRatings[dishId][userId] = userRating
-        })
-        setDishRatings(newDishRatings)
       }
     }
 
@@ -115,37 +120,54 @@ const Cards = () => {
     setHoveredRating(null)
   }
 
-  const handleRatingClick = (selectedRating, dishId) => {
-    const newRatings = { ...dishRatings }
-    const newRatingSum = (newRatings[dishId]?.sum || 0) + selectedRating
-    const newRatingCount = (newRatings[dishId]?.count || 0) + 1
+  const handleRatingClick = async (selectedRating) => {
+    const user = await supabase.auth.getUser()
+    const userRating = dishRatings[selectedRecipe.id]?.[user.id] || 0
 
-    newRatings[dishId] = { sum: newRatingSum, count: newRatingCount }
+    const newRatings = { ...dishRatings }
+    const newRatingSum =
+      (newRatings[selectedRecipe.id]?.sum || 0) + selectedRating
+    const newRatingCount = (newRatings[selectedRecipe.id]?.count || 0) + 1
+
+    newRatings[selectedRecipe.id] = {
+      sum: newRatingSum,
+      count: newRatingCount,
+      rating: selectedRating,
+    }
 
     setValue(selectedRating)
     setDishRatings(newRatings)
+
+    // Recalculate and update average rating
+    const newAverageRating = newRatingSum / newRatingCount
+    setRatingSum(newRatingSum)
+    setRatingCount(newRatingCount)
+    // Update the average rating in your ratings state
+    setRatings({
+      ...ratings,
+      [selectedRecipe.id]: { sum: newRatingSum, count: newRatingCount },
+    })
   }
 
   const handleSubmitRating = async () => {
     setSubmittingRating(true)
 
-    try {
-      const user = await supabase.auth.getUser()
+    const user = await supabase.auth.getUser()
+    const userRating = dishRatings[selectedRecipe.id]?.[user.id] || 0
+    console.log('Current User:', user) // Log the current user object
 
-      if (!user) {
-        console.log('User object is undefined')
-        return
-      }
+    if (user) {
+      // Get the user's ID
+      const user_id = user.data.user.id
 
-      const currentUserId = user.id
-
-      console.log('Current User ID:', currentUserId)
+      // checking user id vlaue
+      console.log('Fetching meals for user ID:', user_id)
 
       // Fetch the user from the users table to get the userId
       const { data: userData, error: userError } = await supabase
         .from('users')
         .select('id') // or any other fields you need
-        .eq('id', currentUserId)
+        .eq('id', user_id)
 
       if (userError) {
         console.log('Error fetching user data', userError.message)
@@ -158,42 +180,52 @@ const Cards = () => {
 
       console.log('User ID from Users Table:', userId)
 
-      const ratingData = {
-        sum: dishRatings[selectedRecipe.id]?.sum || 0,
-        count: dishRatings[selectedRecipe.id]?.count || 0,
-      }
+      // await fetchRatings()
 
-      console.log('Rating Data:', ratingData)
+      const selectedRating = dishRatings[selectedRecipe.id]?.rating || 0
+
+      console.log('Rating Data:', selectedRating)
 
       // Insert the rating into the ratings table
       const { data, error } = await supabase
         .from('fountain_allergens_ratings')
-        .upsert([
-          {
-            dish_id: selectedRecipe.id,
-            user_id: userId,
-            rating: ratingData,
-          },
-        ])
+        .upsert(
+          [
+            {
+              dish_id: selectedRecipe.id,
+              user_id: userId,
+              rating: selectedRating,
+            },
+          ],
+          { onConflict: ['dish_id', 'user_id'] },
+        )
 
       if (error) {
         console.log('Error submitting rating', error.message)
       } else {
         console.log('Rating submitted successfully', data)
+        alert('Rating submitted successfully!')
       }
-    } finally {
-      setSubmittingRating(false)
     }
+    setSubmittingRating(false)
   }
 
   const calculateAverageRating = (dishId) => {
-    const ratingData = ratings[dishId]
-    // to avoid division by zero
-    if (!ratingData || ratingData.count === 0) {
-      return 0
+    const dishRatingData = dishRatings[dishId]
+
+    // Check if there are ratings for the specified dish
+    if (dishRatingData) {
+      const count = dishRatingData.count
+      const sum = dishRatingData.sum
+
+      // Calculate the average rating
+      if (count > 0) {
+        return sum / count
+      }
     }
 
-    return ratingData.sum / ratingData.count
+    // Default to 0 if there are no ratings
+    return 0
   }
 
   return (
@@ -217,7 +249,7 @@ const Cards = () => {
                 <div className="flex items-center mb-2">
                   <FaStar className="text-yellow-500" />
                   <p className="text-sm ml-1 text-gray-400">
-                    {calculateAverageRating(recipe.id).toFixed(1) || 'N/A'}
+                    {calculateAverageRating[recipe.id]?.toFixed(1) || 'N/A'}
                   </p>
                 </div>
                 <p className="text-gray-500 flex-grow mb-4">
@@ -333,7 +365,7 @@ const Cards = () => {
               </div>
             ))}{' '}
           {/* removed a curly bracket */}
-          {recipes.length == 0 && (
+          {recipes.length === 0 && (
             <div className="text-center py-4">Loading recipes...</div>
           )}
         </div>
