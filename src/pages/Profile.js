@@ -29,12 +29,11 @@ const Profile = () => {
   });
 
   const UpdateUser = async () => {
-    const id = userdata.id
-
+    console.log(newuserdata)
     const { error } = await supabase
-    .from("users")
+    .from('users')
     .update({username: newuserdata})
-    .eq("id", id)
+    .eq('id', userdata.id)
 
   if (error) {
     console.error(`Error updating username ${error}`);
@@ -45,6 +44,7 @@ const Profile = () => {
   }
 
   }
+
 
   const UpdateHandler = (event) =>{
     setNewUserData(event.target.value);
