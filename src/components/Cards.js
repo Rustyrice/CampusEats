@@ -17,7 +17,6 @@ const Cards = () => {
   const [ratingCount, setRatingCount] = useState(0)
   const [dishRatings, setDishRatings] = useState({})
   const navigate = useNavigate()
-  const [averageRatings, setAverageRatings] = useState({})
 
   // useEffect(() => {
   //   // fetch data from supabase
@@ -212,6 +211,8 @@ const Cards = () => {
 
   const calculateAverageRating = (dishId) => {
     const dishRatingData = dishRatings[dishId]
+    console.log('dishId:', dishId)
+    console.log('Dish Rating Data:', dishRatingData)
 
     // Check if there are ratings for the specified dish
     if (dishRatingData) {
@@ -249,7 +250,7 @@ const Cards = () => {
                 <div className="flex items-center mb-2">
                   <FaStar className="text-yellow-500" />
                   <p className="text-sm ml-1 text-gray-400">
-                    {calculateAverageRating[recipe.id]?.toFixed(1) || 'N/A'}
+                    {calculateAverageRating(recipe.id).toFixed(1) || 'N/A'}
                   </p>
                 </div>
                 <p className="text-gray-500 flex-grow mb-4">
