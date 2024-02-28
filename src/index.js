@@ -18,6 +18,7 @@ import DietarySelectionPage1 from './pages/DietarySelectionPage1'
 import DietarySelectionPage2 from './pages/DietarySelectionPage2'
 import DietarySelectionPage3 from './pages/DietarySelectionPage3'
 import UserInfo from './pages/UserInfo'
+import Settings from './pages/Settings'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -34,6 +35,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/dp2" element={<DietarySelectionPage2 />} />
         <Route path="/dp3" element={<DietarySelectionPage3 />} />
         <Route path="/userinfo" element={<UserInfo />} />
+        <Route path="/settings" element={<Settings />} />
       </Routes>
     </Router>
   </React.StrictMode>,
