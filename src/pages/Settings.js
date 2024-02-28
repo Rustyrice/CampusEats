@@ -171,20 +171,13 @@ const Settings = () => {
   {/* NAVIGATION BUTTONS */}
   <div className="flex justify-center content-center mb-5 mt-5">
     <Link
-      to="/dp2"
-      state={preferences}
-      className="hover:bg-green-400 rounded-md bg-white font-bold text-green-500 opacity-50 p-5 px-10"
-    >
-      Previous
-    </Link>
-    <Link
       to="/home"
       className="hover:bg-green-400 rounded-md bg-green-500 p-5 px-10 text-white"
       onClick={() => {
         submitPreferences(preferences);
       }}
     >
-      Submit
+      Submit Changes
     </Link>
   </div>
 </div>
