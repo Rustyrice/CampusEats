@@ -7,6 +7,7 @@ import userPreferenceService from "../services/userPreferenceService";
 const Settings = () => {
   const [user, setUser] = useState(null);
   const [preferences, setPreferences] = useState(null);
+  const [username, setUsername] = useState('User')
 
   // GET DETAILS OF CURRENT USER UPON PAGE LOAD
   useEffect(() => {
@@ -16,14 +17,15 @@ const Settings = () => {
         if (error) throw error;
         if (data) {
           setUser(data.user);
-          const allergenData = await supabase
+          const userData = await supabase
             .from("users")
-            .select("allergens")
+            .select("allergens,username")
             .eq("id", data.user.id);
           if (error) {
             console.log("Cant import users");
           } else {
-            setPreferences(allergenData.data[0].allergens);
+            setPreferences(userData.data[0].allergens);
+            setUsername(userData.data[0].username);
           }
         }
       } catch (error) {
@@ -52,7 +54,10 @@ const Settings = () => {
       </div> */}
 
         <p className="text-center text-gray-700 text-xl mb-4 mt-5">
-          Your current dietary requirements, change them press submit
+        Greetings, {username}! 
+        </p>
+        <p className="text-center text-gray-700 text-l mb-4 mt-5">
+        Customize your dietary preferences below and click submit to save.
         </p>
         {/* CHECKLIST */}
         <div className="flex flex-col justify-center ml-5 mr-5 content-center">
