@@ -1,73 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import { render, fireEvent, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
 
-const UserMealComponent = () => {
-  const [userAllergens, setUserAllergens] = useState([]);
-  const [userMeals, setUserMeals] = useState([]);
-  const [filteredMeals, setFilteredMeals] = useState([]);
+//FUNCTION TEST TO ENSURE THAT FILTERING PROCESS WORKS AS INTENDED REGARDLESS OF INPUT SELECTED
 
-  useEffect(() => {
-    // Simulating fetching user allergens from a local object
-    const fetchUserAllergens = () => {
-      // Simulated user allergens
-      const allergens = ['peanut', 'dairy'];
-      setUserAllergens(allergens);
-    };
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import UserMealComponent from './UserMealComponent';
+import "@testing-library/jest-dom";
 
-    // Simulating fetching user meals from a local object
-    const fetchUserMeals = () => {
-      // Simulated user meals
-      const meals = [
-        { name: 'Spaghetti', halal: false, vegetarian: false, vegan: false, peanut: false, dairy: false },
-        { name: 'Salad', halal: true, vegetarian: true, vegan: true, peanut: false, dairy: false },
-        { name: 'Pizza', halal: false, vegetarian: false, vegan: false, peanut: false, dairy: true },
-      ];
-      setUserMeals(meals);
-    };
+test('UserMealComponent filters meals based on preferences', () => {
 
-    fetchUserAllergens();
-    fetchUserMeals();
-  }, []);
+  // SETUP
+  // Define allergens and preferences to filter
+  const allergens = ['peanut', 'dairy'];
+  const preferencesToFilter = ['halal'];
 
-  useEffect(() => {
-    // Filter meals based on user preferences and allergens
-    let filtered = userMeals.filter(meal => {
-      // Check if the meal doesn't contain any allergen from userAllergens
-      return !userAllergens.some(allergen => meal[allergen]);
-    });
+  render(<UserMealComponent allergens={allergens} preferencesToFilter={preferencesToFilter} />);
 
-    // Logging filtered meals
-    console.log('Filtered meals:', filtered);
+  // CALL: Get the components with corresponding texts below from the DOM, if they exist
+  const spaghettiElement = screen.queryByText('Spaghetti');
+  const saladElement = screen.queryByText('Salad');
+  const pizzaElement = screen.queryByText('Pizza');
 
-    // Set filtered meals to state
-    setFilteredMeals(filtered);
-  }, [userAllergens, userMeals]);
+  // ASSERTION
+  expect(spaghettiElement).not.toBeInTheDocument();
+  expect(saladElement).toBeInTheDocument();
+  expect(pizzaElement).not.toBeInTheDocument();
+});
 
-  return (
-    <div>
-      <h2>User Meals</h2>
-      <ul>
-        {filteredMeals.map((meal, index) => (
-          <li key={index}>{meal.name}</li>
-        ))}
-      </ul>
-    </div>
-  );
-};
-
-
-test('Selection box component reflects halal preference', () => {
-    //SETUP
-    render(<SelectionBoxTest />);
-  
-    // CALL
-    const checkbox = screen.getByRole('checkbox'); 
-    fireEvent.click(checkbox);
-  
-    //ASSERTION
-    expect(checkbox).toBeChecked(); // Check if the checkbox reflects the expected state
-  });
-
-export default UserMealComponent;
 

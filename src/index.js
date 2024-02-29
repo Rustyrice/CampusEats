@@ -35,7 +35,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/dp2" element={<DietarySelectionPage2 />} />
         <Route path="/dp3" element={<DietarySelectionPage3 />} />
         <Route path="/userinfo" element={<UserInfo />} />
-        <Route path="/mealcomp" element={<Mealcomp />} />
       </Routes>
     </Router>
   </React.StrictMode>
