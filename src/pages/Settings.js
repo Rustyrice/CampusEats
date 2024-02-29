@@ -3,6 +3,7 @@ import SelectionBox from "../components/SelectionBox";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { supabase } from "../config/client";
+import userPreferenceService from "../services/userPreferenceService";
 
 const Settings = () => {
   const location = useLocation();
@@ -25,6 +26,7 @@ const Settings = () => {
         }
       }
   }
+  
   getUser()
 
 
@@ -174,7 +176,7 @@ const Settings = () => {
       to="/home"
       className="hover:bg-green-400 rounded-md bg-green-500 p-5 px-10 text-white"
       onClick={() => {
-        submitPreferences(preferences);
+        userPreferenceService.submitPreferences(preferences, user.id);
       }}
     >
       Submit Changes
