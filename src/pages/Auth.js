@@ -7,7 +7,7 @@ const Auth = () => {
   return (
     <>
       <div className="flex flex-col items-center">
-        <h2 className =" p-12 my-28 font-bold text-4xl border-double border-2 border-green-500 animate-wiggle">
+        <h2 className =" p-12 my-28 font-bold text-4xl border-double border-2 border-green-500 ">
           CampusEats
         </h2>
         <AuthUi /> 
