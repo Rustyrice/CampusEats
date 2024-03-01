@@ -1,46 +1,46 @@
-import React, { useState, useEffect } from "react";
-import SelectionBox from "../components/SelectionBox";
-import { Link } from "react-router-dom";
-import { supabase } from "../config/client";
-import userPreferenceService from "../services/userPreferenceService";
+import React, { useState, useEffect } from 'react'
+import SelectionBox from '../components/SelectionBox'
+import { Link } from 'react-router-dom'
+import { supabase } from '../config/client'
+import userPreferenceService from '../services/userPreferenceService'
 
 const Settings = () => {
-  const [user, setUser] = useState(null);
-  const [preferences, setPreferences] = useState(null);
+  const [user, setUser] = useState(null)
+  const [preferences, setPreferences] = useState(null)
   const [username, setUsername] = useState('User')
 
   // GET DETAILS OF CURRENT USER UPON PAGE LOAD
   useEffect(() => {
     async function fetchUserData() {
       try {
-        const { data, error } = await supabase.auth.getUser();
-        if (error) throw error;
+        const { data, error } = await supabase.auth.getUser()
+        if (error) throw error
         if (data) {
-          setUser(data.user);
+          setUser(data.user)
           const userData = await supabase
-            .from("users")
-            .select("allergens,username")
-            .eq("id", data.user.id);
+            .from('users')
+            .select('allergens,username')
+            .eq('id', data.user.id)
           if (error) {
-            console.log("Cant import users");
+            console.log('Cant import users')
           } else {
-            setPreferences(userData.data[0].allergens);
-            setUsername(userData.data[0].username);
+            setPreferences(userData.data[0].allergens)
+            setUsername(userData.data[0].username)
           }
         }
       } catch (error) {
-        console.error("Error fetching user data:", error.message);
+        console.error('Error fetching user data:', error.message)
       }
     }
-    fetchUserData();
-  }, []);
+    fetchUserData()
+  }, [])
 
   const updatePreferences = (val) => {
     setPreferences({
       ...preferences,
       [val]: !preferences[val],
-    });
-  };
+    })
+  }
 
   if (preferences)
     return (
@@ -54,89 +54,91 @@ const Settings = () => {
       </div> */}
 
         <p className="text-center text-gray-700 text-xl mb-4 mt-5">
-        Greetings, {username}! 
+          Greetings, {username}!
         </p>
         <p className="text-center text-gray-700 text-l mb-4 mt-5">
-        Customize your dietary preferences below and click submit to save.
+          Customize your dietary preferences below and click submit to save.
         </p>
         {/* CHECKLIST */}
         <div className="flex flex-col justify-center ml-5 mr-5 content-center">
           <SelectionBox
             desc="Halal"
-            onClick={() => updatePreferences("halal")}
+            onClick={() => updatePreferences('halal')}
             checked={preferences.halal}
           />
           <SelectionBox
             desc="Vegetarian"
-            onClick={() => updatePreferences("vegetarian")}
+            onClick={() => updatePreferences('vegetarian')}
             checked={preferences.vegetarian}
           />
           <SelectionBox
             desc="Vegan"
-            onClick={() => updatePreferences("vegan")}
+            onClick={() => updatePreferences('vegan')}
             checked={preferences.vegan}
           />
-
+          <p className="text-center text-gray-700 text-l mb-4 mt-5">
+            Ticked boxes indicate the allergens you are allergic to.
+          </p>
           <SelectionBox
             desc="Lupin"
             checked={preferences.lupin}
-            onClick={() => updatePreferences("lupin")}
+            onClick={() => updatePreferences('lupin')}
           />
 
           <SelectionBox
             desc="Soya"
             checked={preferences.soya}
-            onClick={() => updatePreferences("soya")}
+            onClick={() => updatePreferences('soya')}
           />
           <SelectionBox
             desc="Egg"
             checked={preferences.egg}
-            onClick={() => updatePreferences("egg")}
+            onClick={() => updatePreferences('egg')}
           />
           <SelectionBox
             desc="Milk"
             checked={preferences.milk}
-            onClick={() => updatePreferences("milk")}
+            onClick={() => updatePreferences('milk')}
           />
           <SelectionBox
             desc="Fish"
             checked={preferences.fish}
-            onClick={() => updatePreferences("fish")}
+            onClick={() => updatePreferences('fish')}
           />
           <SelectionBox
             desc="Crustaceans"
             checked={preferences.crustaceans}
-            onClick={() => updatePreferences("crustaceans")}
+            onClick={() => updatePreferences('crustaceans')}
           />
           <SelectionBox
             desc="Molluscs"
             checked={preferences.molluscs}
-            onClick={() => updatePreferences("molluscs")}
+            onClick={() => updatePreferences('molluscs')}
           />
           <SelectionBox
             desc="Mustard"
             checked={preferences.mustard}
-            onClick={() => updatePreferences("mustard")}
+            onClick={() => updatePreferences('mustard')}
           />
           <SelectionBox
             desc="Celery"
             checked={preferences.celery}
-            onClick={() => updatePreferences("celery")}
+            onClick={() => updatePreferences('celery')}
           />
           <SelectionBox
             desc="Peanuts"
             checked={preferences.peanuts}
-            onClick={() => updatePreferences("peanuts")}
+            onClick={() => updatePreferences('peanuts')}
           />
           <SelectionBox
             desc="Sesame Seeds"
             checked={preferences.sesame_seeds}
-            onClick={() => updatePreferences("sesame_seeds")}
+            onClick={() => updatePreferences('sesame_seeds')}
           />
           <SelectionBox
             desc="Sulphur Dioxide"
             checked={preferences.sulphur_dioxide}
-            onClick={() => updatePreferences("sulphur_dioxide")}
+            onClick={() => updatePreferences('sulphur_dioxide')}
           />
 
           {/* NAVIGATION BUTTONS */}
@@ -145,7 +147,7 @@ const Settings = () => {
               to="/home"
               className="hover:bg-green-400 rounded-md bg-green-500 p-5 px-10 text-white"
               onClick={() => {
-                userPreferenceService.submitPreferences(preferences, user.id);
+                userPreferenceService.submitPreferences(preferences, user.id)
               }}
             >
               Save Preferences
@@ -153,12 +155,12 @@ const Settings = () => {
           </div>
         </div>
       </div>
-    );
+    )
   return (
     <div>
       <p>Loading your preferences...</p>
     </div>
-  );
-};
+  )
+}
 
-export default Settings;
+export default Settings
