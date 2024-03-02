@@ -20,34 +20,3 @@ test("Should render selection box component with text passed into description pr
   //ASSERTION - Check if the appropriate component exists
   expect(SelectionBoxComponent).toBeInTheDocument();
 });
-
-// // Assuming SelectionBox has an `onChange` prop to handle changes
-// import { render, fireEvent, screen } from '@testing-library/react';
-// import '@testing-library/jest-dom';
-// import SelectionBox from '../../../components/SelectionBox';
-// import { useState } from 'react';
-
-// // Simulate a parent component to hold the state
-// function SelectionBoxTest() {
-//   const [isHalal, setIsHalal] = useState(false);
-
-//   return (
-//     <SelectionBox
-//       desc="Halal"
-//       onClick={() => setIsHalal(prev => !prev)}
-//       checked={isHalal}
-//     />
-//   );
-// }
-
-// test('Selection box component reflects halal preference', () => {
-//   //SETUP
-//   render(<SelectionBoxTest />);
-
-//   // CALL
-//   const checkbox = screen.getByRole('checkbox');
-//   fireEvent.click(checkbox);
-
-//   //ASSERTION
-//   expect(checkbox).toBeChecked(); // Check if the checkbox reflects the expected state
-// });
