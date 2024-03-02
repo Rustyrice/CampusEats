@@ -18,6 +18,7 @@ import DietarySelectionPage1 from "./pages/DietarySelectionPage1";
 import DietarySelectionPage2 from "./pages/DietarySelectionPage2";
 import DietarySelectionPage3 from "./pages/DietarySelectionPage3";
 import UserInfo from './pages/UserInfo'
+import Mealcomp from "./pages/mealcomp";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
