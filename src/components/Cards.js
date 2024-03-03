@@ -5,7 +5,7 @@ import { getUserMeals } from '../services/homeServices'
 import { Transition } from '@headlessui/react'
 import { useNavigate } from 'react-router-dom'
 
-const Cards = ({enabled}) => {
+const Cards = ({ enabled }) => {
   const [recipes, setRecipes] = useState([])
   const [selectedRecipe, setSelectedRecipe] = useState({})
   const [showPopup, setShowPopup] = useState(false)
@@ -35,7 +35,6 @@ const Cards = ({enabled}) => {
   //   fetchRecipes()
   // }, [])
 
-  
   useEffect(() => {
     const fetchRecipes = async () => {
       // Get the current user
@@ -44,54 +43,51 @@ const Cards = ({enabled}) => {
 
       if (user && user.data && user.data.user) {
         // Get the user's ID
-        const userId = user.data.user.id;
+        const userId = user.data.user.id
 
         // checking user id vlaue
-        console.log("Fetching meals for user ID:", userId);
+        console.log('Fetching meals for user ID:', userId)
 
-        let meals ;
-        if(enabled){
+        let meals
+        if (enabled) {
           const { data, error } = await supabase
-          .from('fountain_allergens')
-          .select('*')
-          if(error){
-            console.log('Error fetching all meals', error.message);
-            return; 
+            .from('fountain_allergens')
+            .select('*')
+          if (error) {
+            console.log('Error fetching all meals', error.message)
+            return
           }
           meals = data
-        }
-        else{
-          const { data: safeMeals, error } = await getUserMeals(userId);
+        } else {
+          const { data: safeMeals, error } = await getUserMeals(userId)
           if (error) {
-            console.log('Error fetching safe meals', error.message);
-            return;
-          } 
+            console.log('Error fetching safe meals', error.message)
+            return
+          }
           meals = safeMeals
-
         }
 
-        console.log("Fetched meals:", meals);
-        setRecipes(meals);
+        console.log('Fetched meals:', meals)
+        setRecipes(meals)
 
         // Call the backend function to get meals safe for the user
         // if (error) {
         //   console.log('Error fetching safe meals', error.message);
-        // } 
-//  i get undefined when fetching the meals 
+        // }
+        //  i get undefined when fetching the meals
         // console.log("Fetched meals:", safeMeals);
         // setRecipes(safeMeals);
-
 
         // else {
         //   console.log("Fetched meals:", meals);
         //   setRecipes(meals);
         // }
       }
-    };
-  
-    fetchRecipes();
-  }, [enabled]);
-  
+    }
+
+    fetchRecipes()
+  }, [enabled])
+
   const allergens = [
     { name: 'lupin', label: 'Lupin' },
     { name: 'soya', label: 'Soya' },
@@ -229,7 +225,6 @@ const Cards = ({enabled}) => {
     <div className="w-full bg-gray-100 py-20">
       <div className="container mx-auto px-4 md:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {/* making some changes in the JSX */}
           {recipes &&
             recipes.length > 0 &&
             recipes.map((recipe) => (
@@ -303,8 +298,8 @@ const Cards = ({enabled}) => {
                         Halal: {selectedRecipe.halal ? 'Yes' : 'No'}
                       </p>
                       {/* rating system */}
-                      <div className="flex flex-col items-center mt-5">
-                        <h3 className="text-md md:text-lg lg:text-xl text-gray-700 font-bold text-left mt-5 mb-2">
+                      <div className="flex flex-col items-center mt-5 mb-3">
+                        <h3 className="text-md md:text-lg lg:text-xl text-gray-700 font-bold mt-5 mb-2">
                           Tried this dish? Give it some feedback!
                         </h3>
                         <div className="flex items-center">
