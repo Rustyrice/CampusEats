@@ -29,6 +29,8 @@ body {
 }
 .auth-button{
   border-radius: 25px;
+  height: 100%;
+  width: 30%;
 }
 
 code {
@@ -48,7 +50,7 @@ code {
   }
 }
 
-@keyframes wiggle {
+/* @keyframes wiggle {
   0% {
     transform: rotate(0deg);
   }
@@ -68,4 +70,4 @@ code {
 
 .animate-wiggle {
   animation: wiggle 1s infinite;
-}
+} */
