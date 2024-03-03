@@ -37,7 +37,7 @@ const AuthUI = () => {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event) => {
       if (event === "SIGNED_IN") {
-        navigate("/home");
+        navigate("/userinfo");
       }
     });
     return () => subscription.unsubscribe();
@@ -48,9 +48,9 @@ const AuthUI = () => {
       <Auth 
         supabaseClient={supabase}
         // controls whether to display only social providers
-        providers={[]}
+        providers={[["google", "github", "discord"]]}
         // onlyThirdPartyProviders
-        redirectTo="http://localhost:3000/Dashboard"
+        redirectTo="http://localhost:3000/userinfo"
         // comes with preconfigured themes, can add custom themes
         theme="dark"
         appearance={{
