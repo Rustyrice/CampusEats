@@ -7,6 +7,7 @@ const SelectionBox = (props) => {
       <div>
         <div className="hover:bg-green-100 border-2 rounded-md mt-5 border-gray-500">
           <Checkbox
+            id={props.desc}
             defaultChecked
             color="green"
             label={props.desc}
@@ -20,7 +21,7 @@ const SelectionBox = (props) => {
   return (
     <div>
       <div className="hover:bg-green-100 border-2 rounded-md mt-5 border-gray-500">
-        <Checkbox color="green" label={props.desc} onClick={props.onClick} />
+        <Checkbox id={props.desc} color="green" label={props.desc} onClick={props.onClick} />
       </div>
     </div>
   );

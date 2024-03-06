@@ -78,7 +78,7 @@ const Navbar = () => {
             {isBottomBarVisible && (
               <div className="fixed bottom-0 left-0 right-0 bg-white p-3 flex justify-around items-center lg:hidden border-t-2 border-gray-200">
                 <Link to="/home">
-                  <div className="flex flex-col items-center cursor-pointer">
+                  <div class="home" className="flex flex-col items-center cursor-pointer">
                     <AiOutlineHome className="text-2xl text-gray-300" />
                     <p className="text-xs text-gray-500">Home</p>
                   </div>
@@ -86,11 +86,11 @@ const Navbar = () => {
                 <button onClick={() => setShowMapPopup(true)}>
                   <div className="flex flex-col items-center cursor-pointer">
                     <FaMapMarkerAlt className="text-2xl text-gray-300" />
-                    <p className="text-xs text-gray-500">Map</p>
+                    <p id="map" className="text-xs text-gray-500">Map</p>
                   </div>
                 </button>
                 <Link to="/enquiries">
-                  <div className="flex flex-col items-center cursor-pointer">
+                  <div class="enquiries" className="flex flex-col items-center cursor-pointer">
                     <MdOutlineForum className="text-2xl text-gray-300" />
                     <p className="text-xs text-gray-500">Enquiries</p>
                   </div>
@@ -98,7 +98,7 @@ const Navbar = () => {
                 {/* display this only if user is an admin */}
                 {loggedIn && isAdmin && (
                   <Link to="/dashboard">
-                    <div className="flex flex-col items-center cursor-pointer">
+                    <div class="dashboard" className="flex flex-col items-center cursor-pointer">
                       <MdOutlineSpaceDashboard className="text-2xl text-gray-300" />
                       <p className="text-xs text-gray-500">Dashboard</p>
                     </div>
@@ -108,7 +108,7 @@ const Navbar = () => {
                   // if user is logged in, show settings
                   <>
                     <Link to="/settings">
-                      <div className="flex flex-col items-center cursor-pointer">
+                      <div class="settings" className="flex flex-col items-center cursor-pointer">
                         <AiOutlineSetting className="text-2xl text-gray-300" />
                         <p className="text-xs text-gray-500">Settings</p>
                       </div>
