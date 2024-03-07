@@ -89,7 +89,9 @@ const Settings = () => {
               desc="Egg"
               checked={preferences.egg}
               onClick={() => updatePreferences('egg')}
+              data-cy="egg-checkbox"
             />
+            
             <SelectionBox
               desc="Milk"
               checked={preferences.milk}
@@ -139,6 +141,7 @@ const Settings = () => {
             {/* NAVIGATION BUTTONS */}
             <div className="flex justify-center content-center mb-5 mt-5">
               <Link
+                id="savepreference"
                 to="/home"
                 className="hover:bg-green-400 rounded-md bg-green-500 p-5 px-10 text-white"
                 onClick={() => {

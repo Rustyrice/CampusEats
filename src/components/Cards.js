@@ -34,6 +34,20 @@ const Cards = ({ enabled }) => {
 
   //   fetchRecipes()
   // }, [])
+  useEffect(() => {
+    const handleEsc = (event) => {
+      if (event.key === 'Escape') {
+        setSelectedRecipe({});
+        setShowPopup(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleEsc);
+
+    return () => {
+      window.removeEventListener('keydown', handleEsc);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchRecipes = async () => {

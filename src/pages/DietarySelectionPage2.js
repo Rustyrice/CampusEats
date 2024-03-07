@@ -80,6 +80,7 @@ const DietarySelectionPage2 = () => {
           checked={preferences.vegetarian}
         />
         <SelectionBox
+          id="vegan"
           desc="Vegan"
           onClick={() => updatePreferences("vegan")}
           checked={preferences.vegan}
@@ -87,8 +88,9 @@ const DietarySelectionPage2 = () => {
 
         {/* BUTTONS */}
 
-        <div className="absolute inset-x-0 bottom-0 h-16 flex justify-center mb-5">
+        <div  className="absolute inset-x-0 bottom-0 h-16 flex justify-center mb-5">
           <Link
+            id="button"
             to={`/dp3`}
             state={preferences}
             className="hover:bg-green-400 rounded-md bg-green-500 p-5 px-10 text-white"
