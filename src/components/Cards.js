@@ -3,7 +3,6 @@ import { FaStar } from 'react-icons/fa'
 import { supabase } from '../config/client'
 import { getUserMeals } from '../services/homeServices'
 import { Transition } from '@headlessui/react'
-import { useNavigate } from 'react-router-dom'
 
 const Cards = ({ enabled }) => {
   const [recipes, setRecipes] = useState([])
@@ -16,38 +15,21 @@ const Cards = ({ enabled }) => {
   const [ratingSum, setRatingSum] = useState(0)
   const [ratingCount, setRatingCount] = useState(0)
   const [dishRatings, setDishRatings] = useState({})
-  const navigate = useNavigate()
 
-  // useEffect(() => {
-  //   // fetch data from supabase
-  //   const fetchRecipes = async () => {
-  //     const { data, error } = await supabase
-  //       .from('fountain_allergens')
-  //       .select('*')
-
-  //     if (error) {
-  //       console.log('error fetching recipes', error.message)
-  //     } else {
-  //       setRecipes(data)
-  //     }
-  //   }
-
-  //   fetchRecipes()
-  // }, [])
   useEffect(() => {
     const handleEsc = (event) => {
       if (event.key === 'Escape') {
-        setSelectedRecipe({});
-        setShowPopup(false);
+        setSelectedRecipe({})
+        setShowPopup(false)
       }
-    };
+    }
 
-    window.addEventListener('keydown', handleEsc);
+    window.addEventListener('keydown', handleEsc)
 
     return () => {
-      window.removeEventListener('keydown', handleEsc);
-    };
-  }, []);
+      window.removeEventListener('keydown', handleEsc)
+    }
+  }, [])
 
   useEffect(() => {
     const fetchRecipes = async () => {
@@ -83,19 +65,6 @@ const Cards = ({ enabled }) => {
 
         console.log('Fetched meals:', meals)
         setRecipes(meals)
-
-        // Call the backend function to get meals safe for the user
-        // if (error) {
-        //   console.log('Error fetching safe meals', error.message);
-        // }
-        //  i get undefined when fetching the meals
-        // console.log("Fetched meals:", safeMeals);
-        // setRecipes(safeMeals);
-
-        // else {
-        //   console.log("Fetched meals:", meals);
-        //   setRecipes(meals);
-        // }
       }
     }
 
@@ -144,7 +113,6 @@ const Cards = ({ enabled }) => {
     setDishRatings(newRatings)
 
     // Recalculate and update average rating
-    const newAverageRating = newRatingSum / newRatingCount
     setRatingSum(newRatingSum)
     setRatingCount(newRatingCount)
     // Update the average rating in your ratings state
@@ -158,7 +126,6 @@ const Cards = ({ enabled }) => {
     setSubmittingRating(true)
 
     const user = await supabase.auth.getUser()
-    const userRating = dishRatings[selectedRecipe.id]?.[user.id] || 0
     console.log('Current User:', user) // Log the current user object
 
     if (user) {
