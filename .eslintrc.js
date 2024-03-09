@@ -8,15 +8,6 @@ module.exports = {
     {
       env: {
         node: true,
-        es6: true,
-        jest: true,
-        browser: true,
-      },
-      rules: {
-        'no-unused-vars': [
-          'warn',
-          { vars: 'all', args: 'after-used', ignoreRestSiblings: false },
-        ],
       },
       files: ['.eslintrc.{js,cjs}'],
       parserOptions: {
@@ -29,10 +20,5 @@ module.exports = {
     sourceType: 'module',
   },
   plugins: ['react'],
-  rules: {
-    'no-unused-vars': [
-      'error',
-      { vars: 'all', args: 'after-used', ignoreRestSiblings: false },
-    ],
-  },
+  rules: {},
 }
