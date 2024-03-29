@@ -4,7 +4,6 @@ import "@testing-library/jest-dom/extend-expect";
 import ingredientService from "../../services/ingredientService";
 import RecipeCard from "../../components/RecipeCard";
 
-// Mock the ingredientService
 jest.mock("../../services/ingredientService", () => ({
   updateMeal: jest.fn(),
   deleteMeal: jest.fn(),
@@ -24,15 +23,10 @@ describe("RecipeCard Component", () => {
   it("allows a user to edit and delete a meal", async () => {
     const onDeleteMock = jest.fn();
 
-    // Render RecipeCard with a mock meal and onDelete function
-    const { getByText, getByPlaceholderText, queryByText } = render(
-      <RecipeCard meal={mockMeal} onDelete={onDeleteMock} />
-    );
+    render(<RecipeCard meal={mockMeal} onDelete={onDeleteMock} />);
 
-    // Simulate clicking the edit button
     fireEvent.click(screen.getByText("Edit"));
 
-    // Simulate changing the name and description of the meal
     fireEvent.change(screen.getByPlaceholderText("Name"), {
       target: { value: "Updated Spaghetti Carbonara" },
     });
@@ -40,10 +34,8 @@ describe("RecipeCard Component", () => {
       target: { value: "An updated classic Italian dish." },
     });
 
-    // Simulate form submission
     fireEvent.click(screen.getByText("Save Changes"));
 
-    // Expect the updateMeal function to have been called
     await waitFor(() =>
       expect(ingredientService.updateMeal).toHaveBeenCalledWith(
         mockMeal.id,
@@ -51,18 +43,14 @@ describe("RecipeCard Component", () => {
       )
     );
 
-    // Simulate clicking the delete button
     fireEvent.click(screen.getByText("Delete"));
 
-    // Confirm deletion
     fireEvent.click(screen.getByText("Yes, Delete"));
 
-    // Expect the deleteMeal function to have been called
     await waitFor(() =>
       expect(ingredientService.deleteMeal).toHaveBeenCalledWith(mockMeal.id)
     );
 
-    // Expect the onDelete function to have been called after deletion
     expect(onDeleteMock).toHaveBeenCalled();
   });
 });

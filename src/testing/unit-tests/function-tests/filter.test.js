@@ -2,7 +2,7 @@
 
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import UserMealComponent from "../../UserMealComponent";
+import UserMealComponent from "../component-tests/UserMealComponent";
 import "@testing-library/jest-dom";
 
 test("UserMealComponent filters meals based on preferences", () => {

@@ -1,6 +1,6 @@
 // UNIT TEST TO VALIDATE THAT COMPONENT RENDERS CORRECTLY ACCORDING TO PROPS GIVEN
 
-import { render, screen, cleanup } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import SelectionBox from "../../../components/SelectionBox";
 
