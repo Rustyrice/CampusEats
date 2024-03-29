@@ -5,7 +5,7 @@ const SelectionBox = (props) => {
   if (props.checked) {
     return (
       <div>
-        <div className="hover:bg-green-100 border-2 rounded-md mt-5 border-gray-500">
+        <div data-testid="tickedCheckbox" className="hover:bg-green-100 border-2 rounded-md mt-5 border-gray-500">
           <Checkbox
             id={props.desc}
             defaultChecked
