@@ -19,19 +19,6 @@ import DietarySelectionPage2 from "./pages/DietarySelectionPage2";
 import DietarySelectionPage3 from "./pages/DietarySelectionPage3";
 import UserInfo from "./pages/UserInfo";
 import Settings from "./pages/Settings";
-import LandingPage from "./pages/Landing";
-import AuthPage from "./pages/Auth";
-import HomePage from "./pages/Home";
-import DashboardPage from "./pages/Dashboard";
-import EnquiriesPage from "./pages/Enquiries";
-import SignUp from "./pages/SignUp";
-import ErrorPage from "./ErrorPage";
-import DietarySelectionPage1 from "./pages/DietarySelectionPage1";
-import DietarySelectionPage2 from "./pages/DietarySelectionPage2";
-import DietarySelectionPage3 from "./pages/DietarySelectionPage3";
-import UserInfo from "./pages/UserInfo";
-import Settings from "./pages/Settings";
-import Mealcomp from "./pages/mealcomp";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
