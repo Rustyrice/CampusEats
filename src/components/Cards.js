@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { FaStar } from 'react-icons/fa'
+import { FaLeaf } from 'react-icons/fa'
+import { FaCarrot } from 'react-icons/fa'
+import { FaPray } from 'react-icons/fa'
+import { FaExclamationCircle } from 'react-icons/fa';
 import { supabase } from '../config/client'
 import { getUserMeals } from '../services/homeServices'
 import { Transition } from '@headlessui/react'
@@ -17,6 +21,8 @@ const Cards = ({ enabled }) => {
   const [ratingCount, setRatingCount] = useState(0)
   const [dishRatings, setDishRatings] = useState({})
   const navigate = useNavigate()
+  const labels = ["Awful", "Bad", "Okay", "Good", "Perfect!"];
+  const [meals2, setMeals2] = useState([])
 
   // useEffect(() => {
   //   // fetch data from supabase
@@ -34,6 +40,36 @@ const Cards = ({ enabled }) => {
 
   //   fetchRecipes()
   // }, [])
+
+  const fetchSafeMeals = async () => {
+    try {
+        const user = await supabase.auth.getUser();
+        console.log('Current User:', user);
+        
+        if (user && user.data && user.data.user) {
+            // Get the user's ID
+            const userId = user.data.user.id;
+            console.log('Fetching meals for user ID:', userId);
+
+            const { data: safeMeals, error } = await getUserMeals(userId);
+            if (error) {
+                console.log('Error fetching safe meals', error.message);
+                return;
+            }
+            setMeals2(safeMeals.map(meal => meal.id));
+        }
+    } catch (error) {
+        console.error('Error fetching safe meals:', error.message);
+    }
+};
+
+useEffect(() => {
+    fetchSafeMeals();
+}, []); // Empty dependency array means this effect runs only once on component mount
+
+const isRecipePresentInMeals = (meals2, specificRecipeId) => {
+    return meals2.includes(specificRecipeId);
+};
 
   useEffect(() => {
     const fetchRecipes = async () => {
@@ -87,6 +123,8 @@ const Cards = ({ enabled }) => {
 
     fetchRecipes()
   }, [enabled])
+  
+  // Call initializeMeals2 to populate meals2
 
   const allergens = [
     { name: 'lupin', label: 'Lupin' },
@@ -220,9 +258,12 @@ const Cards = ({ enabled }) => {
     // Default to 0 if there are no ratings
     return 0
   }
-
+  
   return (
     <div className="w-full bg-gray-100 py-20">
+      <div className="bg-red-400 p-2 mb-4 flex items-center justify-center">
+          <h3 className="text-sm md:text-base lg:text-lg text-white font-bold">If your allergy is life-threatening, please confirm ingredient lists with a member of staff. </h3>
+        </div>
       <div className="container mx-auto px-4 md:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {recipes &&
@@ -239,11 +280,46 @@ const Cards = ({ enabled }) => {
                 />
                 <h2 className="text-2xl font-bold mb-2">{recipe.name}</h2>
                 <div className="flex items-center mb-2">
-                  <FaStar className="text-yellow-500" />
+                <div className="flex items-center ml-auto">
+                
+                  <div className="flex ml-4"> 
+                    {/*vegetarian*/}
+                    {recipe.vegetarian && (
+                      <div className="flex items-center mr-4"> 
+                        <FaLeaf className="text-green-500 mr-1"/>
+                        <p className="text-sm text-gray-500">Vegetarian</p>
+                      </div>
+                    )}
+                    {/*vegan*/}
+                    {recipe.vegan && (
+                      <div className="flex items-center mr-4"> 
+                        <FaCarrot className="text-orange-500 mr-1"/>
+                        <p className="text-sm text-gray-500">Vegan</p>
+                      </div>
+                    )}
+                    {/*halal*/}
+                    {recipe.halal && (
+                      <div className="flex items-center"> 
+                        <FaPray className="text-blue-500 mr-1"/>
+                        <p className="text-sm text-gray-500">Halal</p>
+                      </div>
+                    )}
+                    
+                  </div>
+                  <FaStar className="text-yellow-500 ml-3" />
                   <p className="text-sm ml-1 text-gray-400">
                     {calculateAverageRating(recipe.id).toFixed(1) || 'N/A'}
                   </p>
                 </div>
+              </div>
+              {enabled && !isRecipePresentInMeals(meals2, recipe.id) && (
+                <div className="flex items-center mb-2">
+                  <FaExclamationCircle className="text-red-500 mr-2" />
+                  <p className="font-bold text-sm text-red-500">
+                    Warning: This dish may not be safe to eat!
+                  </p>
+                  </div>
+                )}
                 <p className="text-gray-500 flex-grow mb-4">
                   {recipe.description || 'No description available'}
                 </p>
@@ -263,6 +339,19 @@ const Cards = ({ enabled }) => {
                       <h2 className="text-lg md:text-xl lg:text-2xl text-gray-700 font-bold text-left mb-5">
                         What ingredients does {selectedRecipe.name} contain?
                       </h2>
+                      {enabled && !isRecipePresentInMeals(meals2, recipe.id) && (
+                        <div className="flex items-center mb-2">
+                          <FaExclamationCircle className="text-red-500 mr-2" />
+                          <p className="font-bold text-lg text-red-500">
+                            Warning: This dish contains potential allergens!
+                          </p>
+                          </div>
+                        )}
+                      <div className="bg-lime-500 p-4 rounded-lg mb-4">
+                        <h3 className="text-base md:text-lg lg:text-lg text-white font-bold mt-1">Please note! </h3>
+                        <p className="text-base md:text-s lg:text-s text-white mt-1"> Vegetarian items may include egg.</p>
+                        <p className="text-base md:text-s lg:text-s text-white mb-1"> Even if a dish only "may contain" an allergen, our system logs it as "Yes".</p>
+                        </div>
                       {selectedRecipe.nuts &&
                         selectedRecipe.nuts.length > 0 && (
                           <p className="text-gray-500 mb-4">
@@ -300,7 +389,7 @@ const Cards = ({ enabled }) => {
                       {/* rating system */}
                       <div className="flex flex-col items-center mt-5 mb-3">
                         <h3 className="text-md md:text-lg lg:text-xl text-gray-700 font-bold mt-5 mb-2">
-                          Tried this dish? Give it some feedback!
+                          How accurate was the allergen information provided for this dish?
                         </h3>
                         <div className="flex items-center">
                           {[...Array(5)].map((_, index) => (
@@ -327,6 +416,9 @@ const Cards = ({ enabled }) => {
                                 leaveFrom="scale-100 opacity-100"
                                 leaveTo="scale-75 opacity-0"
                               ></Transition>
+                              <span className="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 text-xs text-gray-500">
+                                    {labels[index]}
+                              </span>
                             </div>
                           ))}
                         </div>
@@ -334,7 +426,7 @@ const Cards = ({ enabled }) => {
                           <button
                             onClick={handleSubmitRating}
                             disabled={submittingRating}
-                            className="bg-green-500 text-white py-1 px-2 rounded-md hover:bg-green-600 transition duration-300"
+                            className="bg-green-500 text-white py-1 px-2 mt-2 rounded-md hover:bg-green-600 transition duration-300"
                           >
                             {submittingRating ? 'Submitting...' : 'Submit'}
                           </button>
@@ -365,5 +457,6 @@ const Cards = ({ enabled }) => {
     </div>
   )
 }
+
 
 export default Cards

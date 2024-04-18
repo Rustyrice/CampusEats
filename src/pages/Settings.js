@@ -4,11 +4,13 @@ import { Link } from 'react-router-dom'
 import { supabase } from '../config/client'
 import userPreferenceService from '../services/userPreferenceService'
 import Navbar from '../components/Navbar'
+import PopUp from '../components/PopUp'
 
 const Settings = () => {
   const [user, setUser] = useState(null)
   const [preferences, setPreferences] = useState(null)
   const [username, setUsername] = useState('User')
+  const [submitButton, setSubmitButton] = useState(false);
 
   // GET DETAILS OF CURRENT USER UPON PAGE LOAD
   useEffect(() => {
@@ -41,6 +43,11 @@ const Settings = () => {
       ...preferences,
       [val]: !preferences[val],
     })
+  }
+
+
+  const handleSubmitPopUp = () => {
+    setSubmitButton(true); 
   }
 
   if (preferences)
@@ -138,20 +145,35 @@ const Settings = () => {
 
             {/* NAVIGATION BUTTONS */}
             <div className="flex justify-center content-center mb-5 mt-5">
+            <button onClick={handleSubmitPopUp} className="hover:bg-green-400 rounded-md bg-green-500 p-3 px-6 text-white">
+                  Save Preferences
+            </button>
+            <PopUp trigger={submitButton} onClose={() => setSubmitButton(false)}>
+	            Are you sure you want to change your preferences?
               <Link
                 to="/home"
-                className="hover:bg-green-400 rounded-md bg-green-500 p-5 px-10 text-white"
+                className="hover:bg-green-400 rounded-md bg-green-500 p-3 px-6 text-white text-small ml-3"
                 onClick={() => {
                   userPreferenceService.submitPreferences(preferences, user.id)
                 }}
               >
-                Save Preferences
+                Yes
               </Link>
+              <Link
+                to="/home"
+                className="hover:bg-red-400 rounded-md bg-red
+                -500 p-3 px-6 text-white text-small ml-3"
+              >
+                No
+              </Link>
+	          </PopUp>
             </div>
           </div>
         </div>
       </div>
     )
+
+
   return (
     <div>
       <p>Loading your preferences...</p>
